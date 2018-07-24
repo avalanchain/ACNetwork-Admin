@@ -58,5 +58,3 @@ let cmdServerCall (apiFunc: 'T -> Async<ServerResult<'R>>) (args: 'T) (completeM
         (fun exn -> console.error(sprintf "Exception during %s call: '%A'" serverMethodName exn)
                     exn |> CommunicationError |> ServerErrorMsg |> UnexpectedMsg |> AppMsg)
 
-let cmdServerCabinetCall apiFunc args completeMsg serverMethodName =
-    cmdServerCall apiFunc args (completeMsg >> Cabinet.Msg.ServerMsg >> CabinetMsg) serverMethodName

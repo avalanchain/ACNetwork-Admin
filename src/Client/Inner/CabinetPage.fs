@@ -27,68 +27,19 @@ open ClientModels
 open Client.CabinetModel
 open Client.LoginCommon
 open Client.Cabinet
+open Shared.Auth
+open Shared.WsBridge
 
-open Web3
-open Web3Types
-
-[<Emit("window.web3")>]
-let web3: Web3 = jsNative
-let IsWeb3 = isNull web3
-
-// console.log (sprintf "IsW3: '%A'" IsWeb3)
-
-// let w3 = web3Factory.Create("http://127.0.0.1:8545" |> U2.Case2 )
-let w3 = web3Factory.Create(web3.currentProvider |> U2.Case1 )
-
-promise {
-    let! accs = w3.eth.getAccounts()
-    console.log "accs"
-    console.log accs
-    let! bal = w3.eth.getBalance(accs.[0])
-    console.log "bal"
-    console.log (bal / 1000000000000000000.)
-    let! coinbase = w3.eth.getCoinbase()
-    console.log "coinbase"
-    console.log (coinbase)
-    let amount = w3.utils.toWei("1" |> U3.Case1, Web3Types.Unit.Ether)
-    
-    // web3.eth.getTransactionCount(accounts[i])
-
-    let! transactions = w3.eth.getTransactionCount(coinbase)
-    console.log "transactions"
-    console.log transactions
-
-    let defaultAccount = web3.eth.defaultAccount
-    console.log "defaultAccount"
-    console.log defaultAccount
-    // let provider = web3.currentProvider :> obj :?> IProvider
-    // let! _ = provider.send(jsOptions<JsonRPCRequest>(fun r ->  r.method <- "personal_sign" |> Some 
-    //                                                            r.``to`` <- Some "0xC25FdBeaD74a9A1d09F3209d2fcDE652d4D359fE" )) 
-
-    let tr = jsOptions<Tx>(fun  tx -> tx.value <- amount |> Some 
-                                      tx.from <- Some coinbase
-                                      tx.``to`` <- Some "0xC25FdBeaD74a9A1d09F3209d2fcDE652d4D359fE" )
- 
-    //coinbase,"0xC25FdBeaD74a9A1d09F3209d2fcDE652d4D359fE"
-
-    // let! tx = w3.eth.sendTransaction tr
-
-    // console.log tx
-
-    // let! balance = w3.eth.getBalance("0xC25FdBeaD74a9A1d09F3209d2fcDE652d4D359fE")
-
-    // console.log "newAccount"
-    // console.log (newAccount)
-    // console.log "getBalanse"
-    // console.log (balance)
-    let! accs = w3.eth.getAccounts()
-    console.log accs
-}
-|> PowerPack.Promise.start
+let cmdServerCabinetCall apiFunc args completeMsg serverMethodName : Cmd<Cabinet.Msg> =
+    cmdServerCall apiFunc args (completeMsg >> Cabinet.Msg.ServerMsg >> CabinetMsg) serverMethodName
+    |> Cmd.map (!!)
 
 let init authToken = 
-    let model = {   Auth        = { Token = authToken }
-                    Customer    = None
+    let model = {   Auth                = { Token = authToken }
+                    Customer            = None
+                    Clusters            = []
+                    ClusterMembership   = None
+                    ActiveNode          = None
     }
     // let cmdGetCryptoCurrencies      = cmdServerCabinetCall (ServerProxy.cabinetApi.getCryptoCurrencies) () GetCryptoCurrenciesCompleted "getCryptoCurrencies()"
     // let cmdGetTokenSale             = cmdServerCabinetCall (ServerProxy.cabinetApi.getTokenSale) () GetTokenSaleCompleted "getTokenSale()"
@@ -102,11 +53,15 @@ let init authToken =
 
 let update (msg: Msg) model : Model * Cmd<Msg> = 
     match msg with
-    | ClustersMsg  -> 
-        model , Cmd.none
+    | ClustersMsg msg_ ->
+        match msg_ with
+        | SelectCluster cid             -> 
+            model, cmdServerCabinetCall (ServerProxy.cabinetApi.getClusterMembership) (secureRequest model.Auth.Token cid) UpdateClusterMembershipCompleted "getClusterMembership()" 
     | ServerMsg msg_     ->
         match msg_ with
-        | ReplaceMe -> model , Cmd.none
+        | GetClustersCompleted clusters         -> { model with Clusters = clusters } , Cmd.none 
+        | UpdateClusterMembershipCompleted cm   -> { model with ClusterMembership = Some cm }, Cmd.none
+        // | ReplaceMe -> model , Cmd.none
     | NodesMsg -> failwith "Not Implemented"
     | ChainsMsg -> failwith "Not Implemented"
     | AccountsMsg -> failwith "Not Implemented"

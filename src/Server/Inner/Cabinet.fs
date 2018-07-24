@@ -30,6 +30,20 @@ let getClusters config (request: SecureVoidRequest) : Task<ServerResult<ACCluste
             |> Ok 
 }
 
+let getClusterMembership config (request: SecureRequest<ACClusterId>) : Task<ServerResult<ACClusterMembership>> = task { 
+    printfn "getClusterMembership() called"
+    return 
+        {
+            Cluster = { CId = request.Content }
+            Nodes   = [{    NId      = NR { Nid = "Node 1" } 
+                            Chains   = [] |> Set.ofList
+                            Endpoint = { IP = "http://127.0.0.1"; Port = 20000us }
+                            Cluster  = Some request.Content
+                        }, ACNodeState.Active ] |> Map.ofList
+        }
+        |> Ok 
+}
+
 let unwrapResult res = 
     match res with 
     | Ok r -> r
@@ -44,8 +58,8 @@ let unwrapResultOpt res =
     | Error exn -> raise exn
 
 let cabinetProtocol config =
-    {   getClusters = getClusters   config    >> Async.AwaitTask
-
+    {   getClusters             = getClusters           config    >> Async.AwaitTask
+        getClusterMembership    = getClusterMembership  config    >> Async.AwaitTask
     }
 
 

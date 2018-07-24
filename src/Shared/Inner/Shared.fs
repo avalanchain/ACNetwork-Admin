@@ -3,6 +3,7 @@ namespace Shared
 open System
 open Auth
 open Result
+open Fable
 
 module Crypto = 
     type [<Interface>] ICryptoContext =
@@ -81,6 +82,10 @@ module ChainDefs =
         | UUID of Guid
         | Hash of Hash
         | Sig of Sig
+        override __.ToString() = match __ with 
+                                    | UUID g -> g.ToString("N")
+                                    | Hash h -> h.Hash
+                                    | Sig s  -> s.Sig
 
     type NodeRef = { Nid: string }
     type MasterNodeRef = { MNid: string }
@@ -294,7 +299,7 @@ open ViewModels.ChainNetwork
 type ICabinetProtocol = {
     getClusters             : SecureVoidRequest             -> Async<ServerResult<ACCluster list>>
     // getClusterById          : SecureRequest<ACClusterId>    -> Async<ServerResult<ACCluster option>>
-    // getClusterMembership    : SecureRequest<ACClusterId>    -> Async<ServerResult<ACClusterMembership>>
+    getClusterMembership    : SecureRequest<ACClusterId>    -> Async<ServerResult<ACClusterMembership>>
 
     // getNodeById             : SecureRequest<ACNodeId>       -> Async<ServerResult<ACNode option>>
     // getNodeMembership       : SecureRequest<ACNodeId>       -> Async<ServerResult<ACClusterId list>>

@@ -8,11 +8,16 @@ open System.Transactions
 open Web3Types
 open System.Transactions
 open Shared.ViewModels
+open Shared.ViewModels.ChainNetwork
 
 type Model = {
-    Auth      : AuthModel
-    Customer  : Customer option             
+    Auth                : AuthModel
+    Customer            : Customer option             
     // Loading     : bool  
+
+    Clusters            : ACCluster list
+    ClusterMembership   : ACClusterMembership option
+    ActiveNode          : ACNodeId option 
 
 }
 // and PurchaseTokenModel = {

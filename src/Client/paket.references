@@ -1,0 +1,16 @@
+group Client
+    FSharp.Core
+    Fable.Elmish.Browser
+    Fable.Elmish.Debugger
+    Fable.Elmish.React
+    Fable.Elmish.HMR
+    Fable.Core
+    Fable.DateFunctions
+    Fable.React
+    Fable.Remoting.Client
+
+    Elmish.Toastr
+    Elmish.Bridge.HMR
+    Elmish.Bridge.Browser
+
+    dotnet-fable

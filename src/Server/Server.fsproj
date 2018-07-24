@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="Libs\TypeShape.Tools\TypeShape.Tools.fsproj">
+      <Name>TypeShape.Tools.fsproj</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ServerFableMocks.fs" />
+    <Compile Include="ServerUtils.fs" />
+    <Compile Include="Database.fs" />
+    <Compile Include="Inner/Config.fs" />    
+    <Compile Include="Templates/App.fs" />
+    <Compile Include="Templates/Index.fs" />
+    <Compile Include="Templates/NotFound.fs" />
+    <Compile Include="Templates/InternalError.fs" />
+    <Compile Include="../Shared/Auth.fs" />
+    <Compile Include="../Shared/Utils.fs" />
+    <Compile Include="../Shared/Inner/Shared.fs" />
+    <Compile Include="Inner/Entities/Customers/CustomersModel.fs" />
+    <Compile Include="Inner/Entities/Customers/CustomersViews.fs" />
+    <Compile Include="Inner/Entities/Customers/CustomersRepository.fs" />
+    <Compile Include="Inner/Entities/Customers/CustomersController.fs" />
+    <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesModel.fs" />
+    <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesViews.fs" />
+    <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesRepository.fs" />
+    <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesController.fs" />
+    <Compile Include="Inner/Entities/AuthTokens/AuthTokensModel.fs" />
+    <Compile Include="Inner/Entities/AuthTokens/AuthTokensViews.fs" />
+    <Compile Include="Inner/Entities/AuthTokens/AuthTokensRepository.fs" />
+    <Compile Include="Inner/Entities/AuthTokens/AuthTokensController.fs" />
+    <Compile Include="Inner/Router.fs" />
+
+    <Content Include="static/*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="AuthJwt.fs" />
+    <Compile Include="Inner/Seed.fs" />
+    <Compile Include="LoginFlow.fs" />
+    <Compile Include="Inner/Cabinet.fs" />
+    <Compile Include="Server.fs" />
+    <Content Include="*.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

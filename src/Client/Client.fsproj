@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Utils.fs" />
+    <Compile Include="../Shared/Auth.fs" />
+    <Compile Include="../Shared/InputValidators.fs" />
+    <Compile Include="../Shared/Inner/Shared.fs" />
+    <Compile Include="lib/BigNumber.fs" />
+    <Compile Include="lib/jsonrpc.fs" />
+    <Compile Include="lib/Web3Types.fs" />
+    <Compile Include="lib/Web3.fs" />
+    <Compile Include="lib/Fable.Recharts.fs" />
+    <Compile Include="lib/ChartJs.fs" />
+    <Compile Include="lib/react-chartjs-2.fs" />
+    <Compile Include="Utils.fs" />
+    <Compile Include="Components/Helpers.fs" />
+    <Compile Include="lib/ReactCopyToClipboard.fs" />
+    <Compile Include="lib/ReactBootstrap.fs" />
+    <Compile Include="Components/Ibox.fs" />
+    <Compile Include="Components/FormHelpers.fs" />
+    <Compile Include="Components/Footer.fs" />
+    <Compile Include="Inner/CabinetMenuPage.fs" />
+    <Compile Include="Page.fs" />
+    <Compile Include="LoginFlow/LoginCommon.fs" />
+    <Compile Include="LoginFlow/LoginPage.fs" />
+    <Compile Include="LoginFlow/ForgotPasswordPage.fs" />
+    <Compile Include="LoginFlow/RegisterPage.fs" />
+    <Compile Include="LoginFlow/PasswordResetPage.fs" />
+    <Compile Include="LoginFlow/LoginFlowPage.fs" />
+
+    <Compile Include="LocalStorage.fs" />
+    <Compile Include="WsClientSharedLibrary.fs" />
+
+    <Compile Include="ClientMsgs.fs" />
+
+    <Compile Include="Inner/CabinetModel.fs" />
+
+    <Compile Include="ClientModels.fs" />
+
+    <Compile Include="Inner/ServerProxy.fs" />
+
+    <!-- <Compile Include="Inner/ContactsPage.fs" /> -->
+    <Compile Include="Inner/ChainsPage.fs" />
+    <Compile Include="Inner/AccountsPage.fs" />
+    <Compile Include="Inner/ClustersPage.fs" />
+    <Compile Include="Inner/NodesPage.fs" />
+    <Compile Include="Inner/CabinetPage.fs" />
+    <Compile Include="Inner/HomePage.fs" />
+    <Compile Include="Components/TopNavbar.fs" />
+    <Compile Include="Inner/Menu.fs" />
+    <Compile Include="WsClientLibrary.fs" />
+    <Compile Include="PageRouter.fs" />
+    <Compile Include="App.fs" />
+    <Compile Include="wsBridge.fs" />
+    <Compile Include="Client.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

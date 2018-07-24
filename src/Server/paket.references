@@ -1,0 +1,18 @@
+group Server
+    FSharp.Core
+    Saturn
+    Fable.Remoting.Giraffe
+    Dapper
+    Microsoft.Data.Sqlite
+    FSharp.Data
+    jose-jwt
+    Elmish.Bridge.Giraffe
+
+    Nethereum.Hex
+    Nethereum.Web3
+    Nethereum.StandardTokenEIP20
+    NBitcoin
+    NBitcoin.Litecoin
+    NBitcoin.Altcoins
+    
+    dotnet-saturn

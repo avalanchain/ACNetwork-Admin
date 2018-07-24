@@ -1,0 +1,55 @@
+dotnet saturn migration
+
+
+
+
+dotnet new SAFE -lang F# --server saturn --remoting --deploy docker --layout fulma-admin --js-deps npm
+
+
+dotnet saturn gen Verification Verifications FirstName:string LastName:string MiddleName:string Gender:string DoB:datetime PassportNo:string PassportCountry:string RegistrationDate:datetime RegCountry:string Address:string City:string PostCode:string DocType:string
+
+
+
+
+        <Compile Include="Verifications/VerificationsController.fs" />
+        <Compile Include="Verifications/VerificationsModel.fs" />
+        <Compile Include="Verifications/VerificationsRepository.fs" />
+        <Compile Include="Verifications/VerificationsViews.fs" />
+
+		
+dotnet saturn gen CryptoCurrency CryptoCurrencies Id:string Name:string LogoUrl:string UpdateUrl:string 
+
+dotnet saturn gen SaleToken SaleTokens Id:string Name:string LogoUrl:string UpdateUrl:string 
+
+dotnet saturn gen TokenSaleDeal TokenSaleDeals Id:int SaleTokenId:string PriceUsd:decimal PriceEth:decimal BonusPercent:decimal BonusTokens:decimal CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+dotnet saturn gen TokenSale TokenSales Id:int SaleTokenId:string SoftCapEth:decimal HardCapEth:decimal SoftCapUsd:decimal HardCapUsd:decimal Expectations:decimal StartDate:datetime EndDate:datetime CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+dotnet saturn gen TokenSaleStage TokenSaleStages Id:int TokenSaleId:int CapEth:decimal CapUsd:decimal StartDate:datetime EndDate:datetime CreatedOn:datetime CreatedBy:datetime Proof:string 
+dotnet saturn gen TokenSaleStageStatusId TokenSaleStageStatusIds Id:int Status:string
+dotnet saturn gen TokenSaleStageStatus TokenSaleStageStatuses Id:int TokenSaleStageId:int Status:int CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+dotnet saturn gen TokenSaleStatusId TokenSaleStatusIds Id:int Status:string
+dotnet saturn gen TokenSaleStatus TokenSaleStatuses Id:int TokenSaleId:int TokenSaleStatusId:int ActiveStageId:int SaleTokenId:int PriceUsd:decimal PriceEth:decimal BonusPercent:decimal BonusTokens:decimal StartDate:datetime EndDate:datetime CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+
+dotnet saturn gen CryptoCurrencyPrice CryptoCurrencyPrices Id:int CryptoCurrencyName:string PriceUsd:decimal PriceEth:decimal PriceAt:datetime CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+
+dotnet saturn gen Customer Customers Id:guid FirstName:string LastName:string EthAddress:string Password:string PasswordSalt:string Avatar:string
+		
+dotnet saturn gen CustomerPreference CustomerPreferences Id:guid Language:string
+
+dotnet saturn gen CustomerVerificationEvent CustomerVerificationEvents Id:guid CustomerId:guid EventType:string CreatedOn:datetime CreatedBy:datetime Proof:string 
+
+
+dotnet saturn gen InvestmentTranStatusId InvestmentTranStatusIds Id:int Status:string
+dotnet saturn gen Investment Investments Id:guid CustomerId:guid EventType:string TokenSaleDealId:int Date:datetime AmountEth:decimal AmountTokens:decimal Rate:decimal InvestmentTranStatusId:int CreatedOn:datetime CreatedBy:datetime Proof:string  
+
+dotnet saturn gen WalletItem Wallets Id:string CustomerId:string Symbol:string AccType:string Address:string PubKey:string PrivKey:string
+
+dotnet saturn gen WalletKV WalletsKV CustomerId:string Wallet:string
+
+dotnet saturn gen FullCustomer FullCustomers Id:guid CustomerTier:string
+
+dotnet saturn gen AuthToken AuthTokens AuthToken:string CustomerId:string Issued:datetime Expires:datetime

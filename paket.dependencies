@@ -17,12 +17,13 @@ group Server
     nuget TypeShape
     nuget FParsec
 
-    nuget Nethereum.Hex
-    nuget Nethereum.Web3
-    nuget Nethereum.StandardTokenEIP20
-    nuget NBitcoin
-    nuget NBitcoin.Litecoin
-    nuget NBitcoin.Altcoins
+    nuget System.Reactive 
+    nuget System.Reactive.Core 
+    nuget System.Reactive.Interfaces 
+    nuget System.Reactive.Linq 
+    nuget System.Reactive.PlatformServices 
+    nuget System.Reactive.Observable.Aliases
+
 
     clitool dotnet-saturn
 

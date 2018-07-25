@@ -1,21 +1,6 @@
 group Server
   FSharp.Core
   FSharp.Control.Reactive
-  FSharp.Control.AsyncSeq
-  Sodium.Core
-  VaultSharp
   TaskBuilder.fs
 
-  Proto.Actor
-  Proto.Actor.Extensions
-  Proto.Mailbox 
-  Proto.Router
-  Proto.Remote 
-  Proto.Persistence
-  Proto.Cluster
-  Proto.Cluster.Consul
-  Proto.Schedulers.SimpleScheduler
-  Proto.Cluster.WeightedMemberStrategy 
-  Proto.Persistence.Sqlite 
-  Proto.Serialization.Wire 
   

@@ -83,7 +83,7 @@ module ChainDefs =
         | Hash of Hash
         | Sig of Sig
         override __.ToString() = match __ with 
-                                    | UUID g -> g.ToString("N")
+                                    | UUID g -> g.ToString().Replace("-", String.Empty)
                                     | Hash h -> h.Hash
                                     | Sig s  -> s.Sig
 

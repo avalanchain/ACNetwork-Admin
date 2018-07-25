@@ -4,9 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libs\Utils\Utils.fsproj" />
-    <ProjectReference Include="..\Server\Libs\TypeShape.Tools\TypeShape.Tools.fsproj" />
-    <ProjectReference Include="..\Libs\LightningDB\LightningDB.csproj" />
+    <!-- <ProjectReference Include="..\Libs\Utils\Utils.fsproj" /> -->
+    <ProjectReference Include="..\..\Server\Libs\TypeShape.Tools\TypeShape.Tools.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- <Compile Include="Actor.fs" /> -->

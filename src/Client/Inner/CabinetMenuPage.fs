@@ -19,6 +19,7 @@ type Msg =
     | AccountsMsg
     | ServerMsg         of ServerMsg
 and ServerMsg =
+    | GetCustomerCompleted              of ViewModels.Customer
     | GetClustersCompleted              of ViewModels.ChainNetwork.ACCluster list
     | UpdateClusterMembershipCompleted  of ACClusterMembership
     // | GetClustersCompleted  of ViewModels.ChainNetwork.ACCluster list

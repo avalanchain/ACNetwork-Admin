@@ -30,9 +30,8 @@ open Client.Cabinet
 open Shared.Auth
 open Shared.WsBridge
 
-let cmdServerCabinetCall apiFunc args completeMsg serverMethodName : Cmd<Cabinet.Msg> =
+let cmdServerCabinetCall apiFunc args completeMsg serverMethodName =
     cmdServerCall apiFunc args (completeMsg >> Cabinet.Msg.ServerMsg >> CabinetMsg) serverMethodName
-    |> Cmd.map (!!)
 
 let init authToken = 
     let model = {   Auth                = { Token = authToken }
@@ -43,15 +42,16 @@ let init authToken =
     }
     // let cmdGetCryptoCurrencies      = cmdServerCabinetCall (ServerProxy.cabinetApi.getCryptoCurrencies) () GetCryptoCurrenciesCompleted "getCryptoCurrencies()"
     // let cmdGetTokenSale             = cmdServerCabinetCall (ServerProxy.cabinetApi.getTokenSale) () GetTokenSaleCompleted "getTokenSale()"
-    // let cmdGetFullCustomerCompleted = cmdServerCabinetCall (ServerProxy.cabinetApi.getFullCustomer) (Auth.secureVoidRequest authToken) GetFullCustomerCompleted "getFullCustomer()"
-    // let cmdGetTransactionsCompleted = cmdServerCabinetCall (ServerProxy.cabinetApi.getTransactions) (Auth.secureVoidRequest authToken) GetTransactionsCompleted "getTransactions()"
-    // let cmd = Cmd.batch [   cmdGetCryptoCurrencies
-    //                         cmdGetTokenSale
-    //                         cmdGetFullCustomerCompleted
-    //                         cmdGetTransactionsCompleted ]
-    model, Cmd.none
+    let cmdGetCustomer = cmdServerCabinetCall (ServerProxy.cabinetApi.getCustomer) (Auth.secureVoidRequest authToken) GetCustomerCompleted "getCustomer()"
+    let cmdGetClusters = cmdServerCabinetCall (ServerProxy.cabinetApi.getClusters) (Auth.secureVoidRequest authToken) GetClustersCompleted "getClusters()"
+    let cmd = Cmd.batch [   //cmdGetCryptoCurrencies
+                            //cmdGetTokenSale
+                            cmdGetCustomer
+                            cmdGetClusters 
+                            ]
+    model, cmd
 
-let update (msg: Msg) model : Model * Cmd<Msg> = 
+let update (msg: Msg) model : Model * Cmd<ClientMsg> = 
     match msg with
     | ClustersMsg msg_ ->
         match msg_ with
@@ -59,6 +59,7 @@ let update (msg: Msg) model : Model * Cmd<Msg> =
             model, cmdServerCabinetCall (ServerProxy.cabinetApi.getClusterMembership) (secureRequest model.Auth.Token cid) UpdateClusterMembershipCompleted "getClusterMembership()" 
     | ServerMsg msg_     ->
         match msg_ with
+        | GetCustomerCompleted customer         -> { model with Customer = Some customer } , Cmd.none
         | GetClustersCompleted clusters         -> { model with Clusters = clusters } , Cmd.none 
         | UpdateClusterMembershipCompleted cm   -> { model with ClusterMembership = Some cm }, Cmd.none
         // | ReplaceMe -> model , Cmd.none

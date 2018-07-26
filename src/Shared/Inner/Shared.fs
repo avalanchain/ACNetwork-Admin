@@ -214,8 +214,6 @@ module ViewModels =
         FirstName   : string
         LastName    : string
         EthAddress  : string
-        Password    : string
-        PasswordSalt: string
         Avatar      : string
         Email       : string
     }
@@ -297,6 +295,7 @@ open ViewModels.ChainNetwork
 /// Every record field must have the type : 'a -> Async<'b> where 'a can also be `unit`
 /// Add more such fields, implement them on the server and they be directly available on client
 type ICabinetProtocol = {
+    getCustomer             : SecureVoidRequest             -> Async<ServerResult<ViewModels.Customer>> 
     getClusters             : SecureVoidRequest             -> Async<ServerResult<ACCluster list>>
     // getClusterById          : SecureRequest<ACClusterId>    -> Async<ServerResult<ACCluster option>>
     getClusterMembership    : SecureRequest<ACClusterId>    -> Async<ServerResult<ACClusterMembership>>
@@ -329,6 +328,6 @@ module WsBridge =
         | ServerConnected
 
         | UserConnected             of AuthToken
-        | NodeStateChanged          of ACNodeId * ACNodeState
-        | ChainStateChanged         of ChainState
+        // | NodeStateChanged          of ACNodeId * ACNodeState
+        // | ChainStateChanged         of ChainState
     

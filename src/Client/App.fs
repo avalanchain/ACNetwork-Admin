@@ -171,7 +171,7 @@ let update (msg : AppMsg) (model : AppModel) : AppModel * Cmd<ClientMsg> =
             match model.PageModel with
             | CabinetModel cabinetModel -> 
                 let model', cmd' = CabinetPage.update msg_ cabinetModel
-                { model with PageModel = CabinetModel model' }, Cmd.map (CabinetMsg >> AppMsg) cmd'
+                { model with PageModel = CabinetModel model' }, cmd'
             | _ -> model, ErrorMsg("Incorrect Message/Model combination for Cabinet flow", CabinetMsg msg_, (string model)) |> AppMsg |> Cmd.ofMsg           
 
     model', cmd' 

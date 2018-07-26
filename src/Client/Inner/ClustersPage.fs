@@ -45,16 +45,36 @@ open ClientModels
 //     | UpdateClusterMembership cm    -> { model with ClusterMembership = Some cm }, Cmd.none
 
 
-let clusters model dispatch = 
-    model.Clusters
-    |> List.map (fun c -> p [] [ a [Href ("#" + c.CId.ToString())
+let clustersView clusters dispatch = 
+    clusters
+    |> List.map (fun c -> p [] [ a [//Href ("#" + c.CId.ToString())
                                     OnClick (fun _ -> c.CId |> SelectCluster |> dispatch ) ] [ c.CId |> string |> str ] ])
     |> div []
 
+let clusterMembershipView clusterMembership dispatch =
+    let rows = 
+        clusterMembership.Nodes
+        |> Seq.map (fun node -> 
+            tr [] [ td [] [ node.Key |> string |> str ]
+                    td [] [ node.Value |> string |> str ] ])
+        |> Seq.toList
+
+    let headAndRows =
+        tr [] [
+            th [] [ str "Node" ]
+            th [] [ str "Status" ]
+        ] :: rows       
+    Fable.Helpers.React.table [] headAndRows 
+        
+    
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
     div [  ]
-        [   str "Clusters"
-            clusters model (ClustersMsg >> dispatch)
-            str "Cluster Membership" 
+        [   yield str "Clusters"
+            yield clustersView model.Clusters (ClustersMsg >> dispatch)
+            match model.ClusterMembership with 
+            | Some clusterMembership ->
+                yield str "Cluster Membership" 
+                yield clusterMembershipView clusterMembership (ClustersMsg >> dispatch)
+            | None -> ()
         ]
 

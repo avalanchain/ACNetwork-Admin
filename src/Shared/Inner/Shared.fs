@@ -183,6 +183,15 @@ module ChainDefs =
         Value: 'T
         Proof: string 
     }
+
+    let newChain() = {
+        algo        = JwtAlgo.Ed25519
+        uid         = Guid.NewGuid() |> UUID
+        chainType   = ChainType.New
+        encryption  = Encryption.None
+        compression = Compression.Deflate 
+    }
+
 open ChainDefs
 
     // let toJwt (ctx: ICryptoContext) (kve: KeyVaultEntry) header (payload: 'T) = result {

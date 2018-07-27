@@ -685,3 +685,39 @@ pre {
 .t3{
     /* width: 10px */
 }
+
+.product-imitation{
+    padding: 45px 0;
+    cursor:pointer;
+}
+
+.product-box{
+    cursor:pointer;
+}
+
+.connected-bg{
+    background-color: #1ab394;
+}
+
+.diconnected-bg{
+    background-color: #d1dade;
+    color: #5e5e5e;
+}
+
+.error-bg{
+    background-color: #ed5565;
+}
+
+.warning-bg{
+    background-color: #f8ac59;
+}
+
+.btn-primary.btn-outline {
+    color: #C7413E;
+    background-color: #ffffff;
+    border-color: #C7413E;
+}
+.btn-primary.btn-outline:hover { /* , .btn-success.btn-outline:hover, .btn-info.btn-outline:hover, .btn-warning.btn-outline:hover, .btn-danger.btn-outline:hover */
+    background-color: #C7413E;
+    border-color: #C7413E;
+}

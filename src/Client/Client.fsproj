@@ -35,6 +35,7 @@
     <Compile Include="WsClientSharedLibrary.fs" />
 
     <Compile Include="ClientMsgs.fs" />
+    <Compile Include="Inner/InnerHelpers.fs" />
 
     <Compile Include="Inner/CabinetModel.fs" />
 

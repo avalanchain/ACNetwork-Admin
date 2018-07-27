@@ -34,7 +34,7 @@ let toHash =
   function
   | MenuPage.Home           -> "#home"
   | MenuPage.LoginFlow lf   -> "#" + (getUnionCaseName lf).ToLowerInvariant()
-  | MenuPage.Cabinet tc     -> "#cabinet/" + (getUnionCaseName tc).ToLowerInvariant()
+  | MenuPage.Cabinet tc     -> "#admin/" + (getUnionCaseName tc).ToLowerInvariant()
 
 let goToUrl (e: React.MouseEvent) =
     // e.stopPropagation()
@@ -49,7 +49,7 @@ let loginFlowPageParsers: Parser<MenuPage -> MenuPage, MenuPage> list =
 
 let cabinetPageParsers: Parser<MenuPage -> MenuPage, MenuPage> list = 
     allUnionCases<Cabinet.MenuPage>
-    |> List.map (fun ed -> map (ed |> MenuPage.Cabinet) (s "cabinet" </> s ((getUnionCaseName ed).ToLowerInvariant())))
+    |> List.map (fun ed -> map (ed |> MenuPage.Cabinet) (s "admin" </> s ((getUnionCaseName ed).ToLowerInvariant())))
 
 
 /// The URL is turned into a Result.

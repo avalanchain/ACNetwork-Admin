@@ -69,10 +69,10 @@ let handleClick (e: React.MouseEvent) =
 let view (menuPage: Cabinet.MenuPage) (dispatch: UIMsg -> unit) =
     let icon  (page: Cabinet.MenuPage) = 
                 match page with 
-                | Cabinet.MenuPage.Clusters         -> "fa fa-address-card"    
-                | Cabinet.MenuPage.Nodes            -> "fa fa-shopping-cart"  
-                | Cabinet.MenuPage.Chains           -> "fa fa-briefcase"  
-                | Cabinet.MenuPage.Accounts         -> "fa fa-refresh"
+                | Cabinet.MenuPage.Clusters         -> "fa fa-database"    
+                | Cabinet.MenuPage.Nodes            -> "fa fa-th"  
+                | Cabinet.MenuPage.Chains           -> "fa fa-link"  
+                | Cabinet.MenuPage.Accounts         -> "fa fa-users"
                 // | Cabinet.MenuPage.Contacts         -> "fa fa-phone"            
                 // | Dashboard         -> "fa fa-th-large"         
 

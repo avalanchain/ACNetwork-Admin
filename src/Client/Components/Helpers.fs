@@ -16,14 +16,14 @@ module Option =
     let map2 f a b = match a, b with    | Some a, Some b -> f a b |> Some 
                                         | _ -> None
 
-let symbolLogo = function
-                    | ETH  -> "../lib/img/coins/eth_logo.png"
-                    | ETC  -> "../lib/img/coins/etc_logo.png"
-                    | BTC  -> "../lib/img/coins/btc_logo.png"
-                    | LTC  -> "../lib/img/coins/ltc_logo.png"
-                    | BCH  -> "../lib/img/coins/bch_logo.png"
-                    | BTG  -> "../lib/img/coins/btg_logo.png"
-                    | DASH -> "../lib/img/coins/dash_logo.png"                
+// let symbolLogo = function
+//                     | ETH  -> "../lib/img/coins/eth_logo.png"
+//                     | ETC  -> "../lib/img/coins/etc_logo.png"
+//                     | BTC  -> "../lib/img/coins/btc_logo.png"
+//                     | LTC  -> "../lib/img/coins/ltc_logo.png"
+//                     | BCH  -> "../lib/img/coins/bch_logo.png"
+//                     | BTG  -> "../lib/img/coins/btg_logo.png"
+//                     | DASH -> "../lib/img/coins/dash_logo.png"                
 
 
 module React =
@@ -46,3 +46,25 @@ let iboxSpinner =
 
 let divider = 1000000000000000000m
 let normalizeBigInt (v : decimal) = (v / divider)
+
+//                                                                      CSS Classes
+
+// Contextual colors
+
+let txtN = "text-navy"
+let txtM = "text-muted"
+let txtP = "text-primary"
+let txtS = "text-success"
+let txtI = "text-info"
+let txtW = "text-warning"
+let txtD = "text-danger"
+let txtWT = "text-white"
+
+//Basic font width
+
+let fb = "font-bold"
+let fn = "font-normal"
+let fi = "font-italic"
+let fu = "font-uppercase"
+let fl = "font-lowercase"
+let fc = "font-capitalize"

@@ -42,10 +42,17 @@ let nodeViewBtn =
 //                            ]
 // let onClickFn = fun _ -> goToPage (toHash (page))
 let clusterNodes clusterMembership dispatch = 
+    let master cl sign name = [ span [ ] [ str name ]
+                                span [ Class (fb + cl) ] [ str sign ]]
+    let nodeName nId = 
+        match nId with
+        | NR nr ->  nr.Nid |> string |>  master "" "" 
+        | MNR mnr -> mnr.MNid |> string |>  master txtN " M"
     let rows = 
             clusterMembership.Nodes
             |> Seq.map (fun node -> 
-                tr [] [ td [] [ node.Key.NId |> string |> str ]
+                tr [] [ td [] (nodeName node.Key.NId)
+                                
                         td [] [ node.Key.Chains.Count |> string |> str ]
                         td [] [ node.Key.Endpoint.IP |> string |> str ]
                         td [] [ node.Key.Endpoint.Port |> string |> str ]

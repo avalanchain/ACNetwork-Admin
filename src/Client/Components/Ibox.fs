@@ -18,7 +18,7 @@ let iboxTitle title = div [ Class "ibox-title" ]
                         [ h5 [ ]
                             [ str title ] ]
 let inner title isLoading body  =
-    div [ Class "ibox float-e-margins" ]
+    div [ Class "ibox float-e-margins animated fadeInUp" ]
                     [ iboxTitle title
                       iboxContent isLoading body]
 let btRow title isLoading body =

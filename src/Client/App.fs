@@ -44,6 +44,7 @@ open Shared.WsBridge
 
 importAll "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 importAll "../Client/lib/css/inspinia/style.css"
+importAll "../Client/lib/css/inspinia/animate.css"
 importAll "../Client/lib/css/inspinia/main.css"
 let ethHost = match Utils.load<string> "EthereumHost" with
                 | Some eh -> eh

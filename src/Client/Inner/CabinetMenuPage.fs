@@ -9,8 +9,8 @@ type MenuPage =
     | Nodes
     | Chains
     | Accounts
-    // | Cluster
-    // | Node
+    | Cluster
+    | Node
     with static member Default = Clusters  
 
 type Msg =

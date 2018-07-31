@@ -48,6 +48,8 @@
     <Compile Include="Inner/AccountsPage.fs" />
     <Compile Include="Inner/ClustersPage.fs" />
     <Compile Include="Inner/NodesPage.fs" />
+    <Compile Include="Inner/ClusterPage.fs" />
+    <Compile Include="Inner/NodePage.fs" />
     <Compile Include="Inner/CabinetPage.fs" />
     <Compile Include="Inner/HomePage.fs" />
     <Compile Include="Components/TopNavbar.fs" />

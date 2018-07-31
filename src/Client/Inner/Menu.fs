@@ -73,14 +73,18 @@ let view (menuPage: Cabinet.MenuPage) (dispatch: UIMsg -> unit) =
                 | Cabinet.MenuPage.Nodes            -> "fa fa-th"  
                 | Cabinet.MenuPage.Chains           -> "fa fa-link"  
                 | Cabinet.MenuPage.Accounts         -> "fa fa-users"
+                | Cabinet.MenuPage.Cluster          -> ""    
+                | Cabinet.MenuPage.Node             -> ""  
                 // | Cabinet.MenuPage.Contacts         -> "fa fa-phone"            
                 // | Dashboard         -> "fa fa-th-large"         
 
     let cabinet = 
-        [   for page in getUnionCases<Cabinet.MenuPage> ->
+        [   for page in getUnionCases<Cabinet.MenuPage> do
+            if page.Name <> Cabinet.MenuPage.Cluster.ToString() && page.Name <> Cabinet.MenuPage.Node.ToString()
+            then
                 let pageName = page.Name |> splitOnCapital 
                 let page = page |> getUnionCase<Cabinet.MenuPage>
-                navViewLink (MenuPage.Cabinet page) pageName (icon page) (page = menuPage)
+                yield navViewLink (MenuPage.Cabinet page) pageName (icon page) (page = menuPage)
         ]
 
     // let divider = li [ ClassName "divider" ] [ ]

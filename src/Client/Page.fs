@@ -42,6 +42,9 @@ let goToUrl (e: React.MouseEvent) =
     let href = !!e.target?href
     Navigation.newUrl href |> List.map (fun f -> f ignore) |> ignore
 
+let goToPage href =
+    Navigation.newUrl href |> List.map (fun f -> f ignore) |> ignore
+
 let loginFlowPageParsers: Parser<MenuPage -> MenuPage, MenuPage> list = 
     allUnionCases<LoginFlow>
     |> List.map (fun ed -> map (ed |> MenuPage.LoginFlow) (s ((getUnionCaseName ed).ToLowerInvariant())))

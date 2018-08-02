@@ -16,8 +16,9 @@ let navBar (customer: Customer option) (dispatch: UIMsg -> unit)  =
                     // HTMLAttr.Custom ("style", "margin-bottom: 0") 
                     ]
                 [ div [ Class "navbar-header logo-bg" ]
-                    [ a [ Class "navbar-minimalize minimalize-styl-2 btn btn-primary "
-                          Href "#" ]
+                    [ div [ Class "navbar-minimalize minimalize-styl-2 btn btn-primary "
+                        //   Href "#" 
+                          ]
                         [ i [ Class "fa fa-bars" ]
                             [ ] ]
                     //   form [ Role "search"

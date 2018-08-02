@@ -97,10 +97,10 @@ let view (menuPage: Cabinet.MenuPage) (dispatch: UIMsg -> unit) =
                                               Href "#" ]
                                             [ span [ Class "clear" ]
                                                    [ img [ Class "logolong"
-                                                           Src "../lib/img/token_cab_2.png" ] ] ]
+                                                           Src "../lib/img/avalanchain.png" ] ] ]
                                            ]
                 div [ Class "logo-element" ]
-                    [ ofString "TC" ] 
+                    [ img [ Src "../lib/img/logo.png" ] ] 
             ]
                     
 
@@ -120,7 +120,7 @@ let mainView page (model: CabinetModel.Model) (dispatch: AppMsg -> unit) cabinet
             div [ Id "page-wrapper"
                   Class "gray-bg" ] [
                   TopNavbar.navBar customer (AppMsg.UIMsg >> dispatch)
-                  div [ Class "wrapper wrapper-content animated fadeInRight"]
+                  div [ Class "wrapper wrapper-content animated fadeInUp"]
                       [ cabinetPageView page model (CabinetMsg >> dispatch) ]
 
                   Footer.footer

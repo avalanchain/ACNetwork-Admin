@@ -112,7 +112,11 @@ button.btn-primary.dim:active {
 }
 
 .logo-element {
-    padding: 4px 0;
+    padding: 7.5px 0;
+}
+
+.logo-element img {
+    height: 45px;
 }
 
 .badge-active,
@@ -492,8 +496,10 @@ button.btn-primary.dim:active {
 }
 
 .logolong{
-    height: 40px;
-    margin: 7px 0;
+    /* height: 40px;
+    margin: 7px 0; */
+    height: 54px;
+    margin-left: 25px;
 }
 .md-skin .nav-header{
     padding: 3px 25px;
@@ -721,3 +727,40 @@ pre {
     background-color: #C7413E;
     border-color: #C7413E;
 }
+
+/* body.mini-navbar .navbar-static-side {
+    -webkit-transition: width 200ms linear;
+    -moz-transition: widthcolor 200ms linear;
+    -o-transition: width 200ms linear;
+    -ms-transition: width 200ms linear;
+    transition: width 200ms linear;
+    width: 70px;
+}
+
+.navbar-static-side {
+    -webkit-transition: width 200ms linear;
+    -moz-transition: widthcolor 200ms linear;
+    -o-transition: width 200ms linear;
+    -ms-transition: width 200ms linear;
+    transition: width 200ms linear;
+    width: 220px;
+} */
+
+
+/* .metismenu {
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: .35s;
+    transition-duration: .35s;
+    -webkit-transition-property: height, visibility;
+    transition-property: height, visibility,width;
+}
+
+.navbar-static-side {
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: .35s;
+    transition-duration: .35s;
+    -webkit-transition-property: width;
+    transition-property: width;
+} */

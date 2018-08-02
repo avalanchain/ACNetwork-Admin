@@ -46,6 +46,10 @@ importAll "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
 importAll "../Client/lib/css/inspinia/style.css"
 importAll "../Client/lib/css/inspinia/animate.css"
 importAll "../Client/lib/css/inspinia/main.css"
+// importAll "../../node_modules/jquery/dist/jquery.min.js"
+// importAll "../Client/lib//js/core/jquery.min.js"
+importAll "../Client/lib/js/inspinia/plugins/metisMenu/jquery.metisMenu.js"
+// importAll "../Client/lib/js/inspinia/avalanchain.js"
 let ethHost = match Utils.load<string> "EthereumHost" with
                 | Some eh -> eh
                 | None -> 

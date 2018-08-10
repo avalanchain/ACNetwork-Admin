@@ -68,3 +68,8 @@ let fi = "font-italic"
 let fu = "font-uppercase"
 let fl = "font-lowercase"
 let fc = "font-capitalize"
+
+//Common
+
+
+let txtCenter = "text-center"

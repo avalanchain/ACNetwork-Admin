@@ -19,6 +19,7 @@
     <Compile Include="Components/Helpers.fs" />
     <Compile Include="lib/ReactCopyToClipboard.fs" />
     <Compile Include="lib/ReactBootstrap.fs" />
+    <Compile Include="lib/Fable.Import.ReactBootstrapTable.fs" />
     <Compile Include="Components/Ibox.fs" />
     <Compile Include="Components/FormHelpers.fs" />
     <Compile Include="Components/Footer.fs" />
@@ -44,6 +45,7 @@
     <Compile Include="Inner/ServerProxy.fs" />
 
     <!-- <Compile Include="Inner/ContactsPage.fs" /> -->
+    <Compile Include="Inner/DashboardPage.fs" />
     <Compile Include="Inner/ChainsPage.fs" />
     <Compile Include="Inner/AccountsPage.fs" />
     <Compile Include="Inner/ClustersPage.fs" />

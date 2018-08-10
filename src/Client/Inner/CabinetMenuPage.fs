@@ -5,6 +5,7 @@ open Shared.ViewModels.ChainNetwork
 
 
 type MenuPage =
+    | Dashboard
     | Clusters
     | Nodes
     | Chains

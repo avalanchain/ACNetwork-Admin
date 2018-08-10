@@ -75,6 +75,7 @@ let view (menuPage: Cabinet.MenuPage) (dispatch: UIMsg -> unit) =
                 | Cabinet.MenuPage.Accounts         -> "fa fa-users"
                 | Cabinet.MenuPage.Cluster          -> ""    
                 | Cabinet.MenuPage.Node             -> ""  
+                | Cabinet.MenuPage.Dashboard        -> "fa fa-pie-chart"
                 // | Cabinet.MenuPage.Contacts         -> "fa fa-phone"            
                 // | Dashboard         -> "fa fa-th-large"         
 

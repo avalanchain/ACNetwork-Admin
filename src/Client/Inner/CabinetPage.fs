@@ -69,12 +69,13 @@ let update (msg: Msg) model : Model * Cmd<ClientMsg> =
         
 let view (page: Cabinet.MenuPage) (model: Model) (dispatch: Msg -> unit) = 
     match page with
-        | Cabinet.MenuPage.Clusters     -> [ ClustersPage.view model dispatch ]
-        | Cabinet.MenuPage.Nodes        -> [ NodesPage.view model dispatch ]
-        | Cabinet.MenuPage.Cluster      -> [ ClusterPage.view model dispatch ]
-        | Cabinet.MenuPage.Node         -> [ NodePage.view model dispatch ]
-        | Cabinet.MenuPage.Chains       -> [ ChainsPage.view model dispatch ]
-        | Cabinet.MenuPage.Accounts     -> [ AccountsPage.view model dispatch ]
+        | Cabinet.MenuPage.Clusters      -> [ ClustersPage.view model dispatch ]
+        | Cabinet.MenuPage.Nodes         -> [ NodesPage.view model dispatch ]
+        | Cabinet.MenuPage.Cluster       -> [ ClusterPage.view model dispatch ]
+        | Cabinet.MenuPage.Node          -> [ NodePage.view model dispatch ]
+        | Cabinet.MenuPage.Chains        -> [ ChainsPage.view model dispatch ]
+        | Cabinet.MenuPage.Accounts      -> [ AccountsPage.view model dispatch ]
+        | Cabinet.MenuPage.Dashboard     -> [ DashboardPage.view model dispatch ]
     |> div [] 
         
 

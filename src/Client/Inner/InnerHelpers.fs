@@ -45,7 +45,11 @@ let prodItem body icon onClickFun =
                                 ] ] ] ]
 let master cl sign name = [     span [ ] [ str name ]
                                 span [ Class (fb + cl) ] [ str sign ]]
-let nodeName nId = 
+let nodeNameSpans nId = 
         match nId with
         | NR nr ->  nr.Nid |> string |>  master "" "" 
         | MNR mnr -> mnr.MNid |> string |>  master txtN " M"
+let nodeName nId = 
+        match nId with
+        | NR nr ->  nr.Nid |> string 
+        | MNR mnr -> mnr.MNid |> string 

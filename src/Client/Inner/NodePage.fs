@@ -150,20 +150,29 @@ let paginationButtons act sz =
     ]
 
 
+let onclickFun = fun _ -> ()//cluster.CId |> SelectCluster |> dispatch 
+                                                // goToPage (toHash page)  
+let showBtn = 
+    comF button (fun o -> o.bsClass <- "btn btn-success btn-outline btn-xs" |> Some
+                          o.onClick <- React.MouseEventHandler(onclickFun) |> Some  
+                          )
+                        [ str "show" ]
 
 let chains (chs:Set<ChainDefs.ChainDef>) = 
     // let items = 
     let rows = 
             chs
             |> Seq.map (fun ts -> 
-                tr [] [ td [] [ ts.algo |> string |> str]
-                                
+                tr [] [                         
                         td [] [ 
                                   chainType ts.chainType
                              ]
+                        td [] [ ts.uid |> string |> str ]
+                        td [] [ ts.algo |> string |> str]
+                                
                         td [] [ ts.compression |> string |> str ]
                         td [] [ ts.encryption |> string |> str ]
-                        td [] [ ts.uid |> string |> str ]
+                        td [] [ showBtn ]
                         ]
                         )
             |> Seq.toList
@@ -175,12 +184,12 @@ let chains (chs:Set<ChainDefs.ChainDef>) =
                             [
                                 thead [][
                                     tr[][
-                                        th [][str "Algo" ]
                                         th [][str "Type" ]
+                                        th [][str "Uid" ]
+                                        th [][str "Algo" ]
                                         th [][str "Compression" ]
                                         th [][str "Encryption" ]
-                                        th [][str "Uid" ]
-                                        // th [][str "GAS USED" ]
+                                        th [][str "Action" ]
                                         // th [ Class "text-center"  ][str "VALUE" ]
                                     ]
                                 ]

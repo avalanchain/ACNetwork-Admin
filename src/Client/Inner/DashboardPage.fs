@@ -42,11 +42,17 @@ type [<Pojo>] MapStyleProp = { width: string ;height: string }
 type [<Pojo>] FillMap = { fill: string; }
 type [<Pojo>] ColorStylesMap = { initial: FillMap ; selected: FillMap }
 
-type [<Pojo>] CountryMap = {   RU: int
-                               GB: int
-                               US: int
-                               CN: int
-                               AU: int }
+type [<Pojo>] CountryMap = {   RU: int option
+                               GB: int option
+                               US: int option
+                               CN: int option
+                               AU: int option }
+type Country =             
+    | RU
+    | GB 
+    | US 
+    | CN 
+    | AU                             
 // type CountryName = {           RU: string
 //                                GB: string
 //                                US: string
@@ -80,9 +86,9 @@ let clusterMap (mapData:CountryMap) =
     
     ///     Chart
     let datasets = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
-        o.data <- [| 300.; 50.; 100. |] |> U2.Case1 |> Some
-        o.backgroundColor <- [| "#1ab394"; "#36A2EB"; "#FFCE56" |] |> Array.map U4.Case1 |> U2.Case2 |> Some
-        o.hoverBackgroundColor <- [| "#1ab394"; "#36A3EB"; "#FFCF56" |] |> U2.Case2 |> Some)
+        o.data <- [| 2.; 5.; 1.; 4.; 1. |] |> U2.Case1 |> Some
+        o.backgroundColor <- [| "#1ab394"; "#ed5565"; "#FFCE56"; "#23c6c8"; "#1c84c6" |] |> Array.map U4.Case1 |> U2.Case2 |> Some
+        o.hoverBackgroundColor <- [| "#15997d"; "#15997d"; "#15997d"; "#15997d"; "#15997d" |] |> U2.Case2 |> Some)
 
     let chartJsData: ChartJs.Chart.ChartData = {
         // let countrNames name = 
@@ -91,23 +97,30 @@ let clusterMap (mapData:CountryMap) =
         //     | GB -> "United Kingdom"
         //     | US -> "USA"
         //     | CN -> "China"
-        //     | AU -> "China"
+        //     | AU -> "Australia"
 
-        labels = [| "USA"; "EUROPE"; "GB" |] |> Array.map U2.Case1  
+        labels = [| "Russia"; "United Kingdom"; "USA"; "China"; "Australia" |] |> Array.map U2.Case1  
         datasets = [| datasets |] 
     }
 
-    let chartProps = jsOptions<ChartComponentProps>(fun o -> 
-        o.data <- chartJsData |> ChartData.ofT ); 
+    let chartProps = 
+        let clo =  jsOptions<ChartJs.Chart.ChartLegendOptions>(fun clo -> 
+                            clo.position <- ChartJs.Chart.PositionType.Bottom |> Some
+                            // clo.display  <-  true |> Some
+                            )
 
-    Ibox.btRow "Transactions worldwide" false 
+        jsOptions<ChartComponentProps>(fun o -> 
+                o.data   <- chartJsData |> ChartData.ofT
+                o.legend <- clo |> Some ); 
+
+    Ibox.btRow "Clusters worldwide" false 
 
                     [   Ibox.emptyRow
                             [
-                                Ibox.btColEmpty "6" [
+                                Ibox.btColEmpty "5" [
                                     ofImport "Doughnut" "react-chartjs-2" chartProps []
                                     ]
-                                Ibox.btColEmpty "6" [
+                                Ibox.btColEmpty "7" [
                                     ofImport "VectorMap" "react-jvectormap" (createObj [   "map" ==> "world_mill"
                                                                                         //    "fills" ==> fills
                                                                                            "regionStyle" ==> regionStyle
@@ -119,55 +132,135 @@ let clusterMap (mapData:CountryMap) =
                                     ]
                                     ]
                     ]
-let dashboardView  = 
-    Ibox.btRow "Testnet" false 
-                    [
-                        div [ Class "row" ] 
+
+let clBody (count:int) subname = 
+    div [ ]
+        [
+            h2 []
+                   [ str (count.ToString()) ]
+            div [ Class "stat-percent font-bold text-info" ]
+                [
+                ]
+            small []
+                  [
+                      str subname 
+                  ]  
+        ]    
+let nodesInfo count =
+
+    div [ Class "ibox float-e-margins animated fadeInUp" ]
+                        [ div [ Class "ibox-title" ]
+                            [ h5 [ ]
+                                [ str "Nodes" ] 
+                              span [ Class "label label-primary pull-right" ]
+                                    [str "up"]
+                              ] 
+                          Ibox.iboxContent false [clBody 30 "Testnet" ]]
+let transactionsInfo count =
+
+    div [ Class "ibox float-e-margins animated fadeInUp" ]
+                        [ div [ Class "ibox-title" ]
+                            [ h5 [ ]
+                                [ str "Transactions" ] 
+                              span [ Class "label label-primary pull-right" ]
+                                    [str "signed"]
+                              ] 
+                          Ibox.iboxContent false [clBody 12434325 "Testnet" ]]
+let clustersInfo count =
+
+    div [ Class "ibox float-e-margins animated fadeInUp" ]
+                        [ div [ Class "ibox-title" ]
+                            [ h5 [ ]
+                                [ str "Clusters" ] 
+                              span [ Class "label label-primary pull-right" ]
+                                    [str "up"]
+                              ] 
+                          Ibox.iboxContent false [clBody count "Cluster by region"]]
+
+let dashboardView count = 
+    div [ Class "row" ] 
                             [
-                                div [ Class "col-md-6" ] 
+                                div [ Class "col-md-4" ] 
                                     [
-                                        // ChartsPG.lineChartSample()
+                                        clustersInfo count
                                     ]
-                                div [ Class "col-md-6" ] 
+                                div [ Class "col-md-4" ] 
                                     [
-                                        // ofImport "Doughnut" "react-chartjs-2" chartProps []
+                                        nodesInfo count
+                                    ]
+                                div [ Class "col-md-4" ] 
+                                    [
+                                        transactionsInfo count
                                     ]
                             ]
+    // Ibox.btRow "Testnet" false 
+    //                 [
+    //                     div [ Class "row" ] 
+    //                         [
+    //                             div [ Class "col-md-4" ] 
+    //                                 [
+    //                                     clustersInfo count
+    //                                 ]
+    //                             div [ Class "col-md-4" ] 
+    //                                 [
+    //                                     // ofImport "Doughnut" "react-chartjs-2" chartProps []
+    //                                 ]
+    //                         ]
                         
-                        div [ Class "row" ] 
-                            [
-                                div [ Class "col-md-6" ] 
-                                    [
-                                        ofFunction GaugeChart { width = 500 } [ p[] [ str "asasdasdasdasd"]]
-                                    ]
-                                div [ Class "col-md-6" ] 
-                                    [
-                                        GaugeChart { width = 500 }
-                                    ]
-                            ]
+    //                     div [ Class "row" ] 
+    //                         [
+    //                             div [ Class "col-md-6" ] 
+    //                                 [
+    //                                     ofFunction GaugeChart { width = 500 } [ p[] [ str "asasdasdasdasd"]]
+    //                                 ]
+    //                             div [ Class "col-md-6" ] 
+    //                                 [
+    //                                     GaugeChart { width = 500 }
+    //                                 ]
+    //                         ]
                         
-                        // ChartsPG.radialChartSample()
+    //                     // ChartsPG.radialChartSample()
                         
                         
-                    ]
+    //                 ]
                     // let rMoment (date:DateTime)  = ofImport "default" "react-moment" (createObj [  "date" ==> date
 //                                                                                "fromNow" ==> true  ]) []
 
+//"Russia"; "United Kingdom"; "USA"; "China"; "Australia"
 
-
+let countryNames = function
+                    | RU  -> "Russia"
+                    | GB  -> "United Kingdom"
+                    | US  -> "USA"
+                    | CN  -> "China"
+                    | AU  -> "Australia"
+// let t (data: (Country * int) []) : ResizeArray<string> = 
+//         // let dt:CountryMap  = {}
+//         let countrynames = ResizeArray<string>()
+//         // let mutable tt  = ""
+        
+//         let cn (country: Country * int) = country |> U2.Case1 |> countryNames
+//         for country in data ->
+//             countrynames.Add(cn country)
+//         //     // match (co |> Case1) with
+//         //     //     | US -> dt.US = 1
+//         // dt 
+//         countrynames                  
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
-    let data:CountryMap = {  US = 2;
-                             GB = 5;
-                             RU = 1;
-                             CN = 4
-                             AU = 1 } 
+    let data1 = [| US, 2; GB, 5; RU, 1; CN, 4; AU, 1; |]
+    // let tt = t data1
+    let dataCountry:CountryMap = {  US = Some 2 ;
+                                    GB = Some 5;
+                                    RU = Some 1;
+                                    CN = Some 4
+                                    AU = Some 1 } 
     div [  ]
         [  
             
     
 
-           clusterMap data
-        //    dashboardView
+           clusterMap dataCountry
+           dashboardView data1.Length
             // str "Cluster"
             // match model.ClusterMembership with 
             // | Some clusterMembership ->

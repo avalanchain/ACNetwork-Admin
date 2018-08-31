@@ -52,13 +52,17 @@ type Country =
     | GB 
     | US 
     | CN 
-    | AU                             
-// type CountryName = {           RU: string
-//                                GB: string
-//                                US: string
-//                                CN: string
-//                                AU: string }
-type [<Pojo>] ScaleProp = { active: string }
+    | AU    
+
+type CountryInfo = {
+    Abbreviation: Country
+    Name        : string
+    CountOfNodes: uint32
+    BackgroundColor: string
+    // ForegroundColor: string
+}                         
+
+type [<Pojo>] ScaleProp   = { active    : string }
 type [<Pojo>] RegionsProp = { scale     : string array
                               attribute : string
                               values    : CountryMap }
@@ -68,12 +72,15 @@ type [<Pojo>] SeriesProp = { regions: RegionsProp[] }
 /// 
 
 
-type [<Pojo>] GaugeChartProps = { width: int }
-let GaugeChart : GaugeChartProps -> ReactElement = importDefault "../GaugeChart.jsx"
-// let GaugeChart : unit -> ReactElement = import "GaugeChart" "../GaugeChart.jsx"
-
-
-let clusterMap (mapData:CountryMap) = 
+let clusterMap clusters = 
+    let mapData: CountryMap = clusters |> Array.map (fun ci -> ci.Abbreviation |> string ==> Some ci.CountOfNodes ) |> createObj |> unbox
+    
+    let chartValues = clusters |> Array.map (fun ci -> ci.CountOfNodes |> float )
+    let chartLabels = clusters |> Array.map (fun ci -> ci.Name )
+    let chartBGColors = clusters |> Array.map (fun ci -> ci.BackgroundColor )
+    
+    // let chartHoverColors = Array.init clusters.Length (fun _ ->  "#15997d")
+    let chartHoverColors = clusters |> Array.map(fun _ ->  "#15997d" )
     ///     Map
     let contstyle: MapStyleProp =  { width = "100%"; height = "300px"}
     let regionStyle: ColorStylesMap =   {  initial = { fill = "#DBDAD6" }; selected = { fill = "#1ab394" } }            
@@ -86,9 +93,10 @@ let clusterMap (mapData:CountryMap) =
     
     ///     Chart
     let datasets = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
-        o.data <- [| 2.; 5.; 1.; 4.; 1. |] |> U2.Case1 |> Some
-        o.backgroundColor <- [| "#1ab394"; "#ed5565"; "#FFCE56"; "#23c6c8"; "#1c84c6" |] |> Array.map U4.Case1 |> U2.Case2 |> Some
-        o.hoverBackgroundColor <- [| "#15997d"; "#15997d"; "#15997d"; "#15997d"; "#15997d" |] |> U2.Case2 |> Some)
+        o.data <- chartValues |> U2.Case1 |> Some
+        o.backgroundColor <- chartBGColors |> Array.map U4.Case1 |> U2.Case2 |> Some
+        // o.hoverBackgroundColor <- chartHoverColors |> U2.Case2 |> Some
+        )
 
     let chartJsData: ChartJs.Chart.ChartData = {
         // let countrNames name = 
@@ -99,7 +107,7 @@ let clusterMap (mapData:CountryMap) =
         //     | CN -> "China"
         //     | AU -> "Australia"
 
-        labels = [| "Russia"; "United Kingdom"; "USA"; "China"; "Australia" |] |> Array.map U2.Case1  
+        labels = chartLabels |> Array.map U2.Case1  
         datasets = [| datasets |] 
     }
 
@@ -136,7 +144,7 @@ let clusterMap (mapData:CountryMap) =
 let clBody (count:int) subname = 
     div [ ]
         [
-            h2 []
+            h2 [ Class "fbold" ]
                    [ str (count.ToString()) ]
             div [ Class "stat-percent font-bold text-info" ]
                 [
@@ -165,7 +173,7 @@ let transactionsInfo count =
                               span [ Class "label label-primary pull-right" ]
                                     [str "signed"]
                               ] 
-                          Ibox.iboxContent false [clBody 12434325 "Testnet" ]]
+                          Ibox.iboxContent false [clBody 724304032 "Testnet" ]]
 let clustersInfo count =
 
     div [ Class "ibox float-e-margins animated fadeInUp" ]
@@ -193,168 +201,166 @@ let dashboardView count =
                                         transactionsInfo count
                                     ]
                             ]
-    // Ibox.btRow "Testnet" false 
-    //                 [
-    //                     div [ Class "row" ] 
-    //                         [
-    //                             div [ Class "col-md-4" ] 
-    //                                 [
-    //                                     clustersInfo count
-    //                                 ]
-    //                             div [ Class "col-md-4" ] 
-    //                                 [
-    //                                     // ofImport "Doughnut" "react-chartjs-2" chartProps []
-    //                                 ]
-    //                         ]
-                        
-    //                     div [ Class "row" ] 
-    //                         [
-    //                             div [ Class "col-md-6" ] 
-    //                                 [
-    //                                     ofFunction GaugeChart { width = 500 } [ p[] [ str "asasdasdasdasd"]]
-    //                                 ]
-    //                             div [ Class "col-md-6" ] 
-    //                                 [
-    //                                     GaugeChart { width = 500 }
-    //                                 ]
-    //                         ]
-                        
-    //                     // ChartsPG.radialChartSample()
-                        
-                        
-    //                 ]
-                    // let rMoment (date:DateTime)  = ofImport "default" "react-moment" (createObj [  "date" ==> date
-//                                                                                "fromNow" ==> true  ]) []
 
-//"Russia"; "United Kingdom"; "USA"; "China"; "Australia"
 
-let countryNames = function
-                    | RU  -> "Russia"
-                    | GB  -> "United Kingdom"
-                    | US  -> "USA"
-                    | CN  -> "China"
-                    | AU  -> "Australia"
-// let t (data: (Country * int) []) : ResizeArray<string> = 
-//         // let dt:CountryMap  = {}
-//         let countrynames = ResizeArray<string>()
-//         // let mutable tt  = ""
-        
-//         let cn (country: Country * int) = country |> U2.Case1 |> countryNames
-//         for country in data ->
-//             countrynames.Add(cn country)
-//         //     // match (co |> Case1) with
-//         //     //     | US -> dt.US = 1
-//         // dt 
-//         countrynames                  
+let testNetView clusters = 
+    let chartNodeValues = clusters |> Array.map (fun ci -> ci.CountOfNodes+3u |> float )
+    let chartTrValues = clusters |> Array.map (fun ci -> (ci.CountOfNodes * (uint32 ci.Name.Length) ) |> float )
+
+    let datasetsNodes = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
+        o.label <- "Nodes" |> Some
+        o.data <- chartNodeValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
+        o.backgroundColor <- [| "#1ab394"; "#ed5565"; "#FFCE56"; "#23c6c8"; "#1c84c6" |] |> Array.map U4.Case1 |> U2.Case2 |> Some
+        o.yAxisID <- "A"     |> Some
+        )
+
+    let datasetsTr = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
+        o.label <- "Transactions" |> Some
+        o.data <- chartTrValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
+        o.backgroundColor <- [| "#1ab300"; "#ed5500"; "#FFCE00"; "#23c600"; "#1c8400" |] |> Array.map U4.Case1 |> U2.Case2 |> Some
+        o.yAxisID <- "B" |> Some
+        )
+
+
+    let chartColor: ChartJs.Chart.ChartColor =  "#1c84c6" |> U4.Case1
+    let chartColorBack: ChartJs.Chart.ChartColor =  "#3aa3e6" |> U4.Case1
+    
+    let datasetsTr2 = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
+        o.label <- "Transactions" |> Some
+        o.data <- chartTrValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
+        o.backgroundColor <- chartColorBack |> U2.Case1 |> Some
+        o.borderColor <- chartColor |> U2.Case1 |> Some
+        // o.yAxisID <- "B" |> Some
+        )    
+    let chartNodesData: ChartJs.Chart.ChartData = {
+        labels = [| "Russia"; "United Kingdom"; "USA"; "China"; "Australia" |] |> Array.map U2.Case1  
+        datasets = [| datasetsNodes; datasetsTr |] 
+    }
+    let chartTransData: ChartJs.Chart.ChartData = {
+        labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018" |] |> Array.map U2.Case1  
+        datasets = [| datasetsTr2 |] 
+    }
+    let chartNodesProps = 
+        let clo =  jsOptions<ChartJs.Chart.ChartLegendOptions>(fun clo -> 
+                            clo.position <- ChartJs.Chart.PositionType.Bottom |> Some
+                            )
+        let cTicks = jsOptions<ChartJs.Chart.TickOptions>(fun ct -> 
+                                    ct.beginAtZero <- true |> Some
+                                    // ct.display <- false |> Some
+                                    )   
+        let cTicks2 = jsOptions<ChartJs.Chart.TickOptions>(fun ct -> 
+                                    ct.display <- true |> Some
+                                    ct.min <- 0u :> obj |> Some
+                                    )                                   
+        let sTileO name = jsOptions<ChartJs.Chart.ScaleTitleOptions>(fun sto -> 
+                                    sto.labelString <- name |> Some
+                                    sto.display <- true |> Some
+                                    )           
+        let chartYAxeFirst = jsOptions<ChartJs.Chart.ChartYAxe>(fun cya -> 
+                                    cya.ticks <- cTicks2 |> Some
+                                    cya.id <- "A" |> Some
+                                    cya.position <- "left" |> Some
+                                    cya.scaleLabel <- sTileO "Nodes" |> Some
+                                    )
+        let chartYAxeSecond = jsOptions<ChartJs.Chart.ChartYAxe>(fun cya -> 
+                                    cya.ticks <- cTicks |> Some
+                                    cya.id <- "B" |> Some
+                                    cya.position <- "right" |> Some
+                                   
+                                    cya.scaleLabel <- sTileO "Transactions" |> Some
+                                    )                            
+        let raYAxe =  ResizeArray<ChartJs.Chart.ChartYAxe>()     
+        raYAxe.Add(chartYAxeFirst) 
+        raYAxe.Add(chartYAxeSecond) 
+
+        // let chartXAxeFirst = jsOptions<ChartJs.Chart.ChartXAxe>(fun cya -> 
+        //                             cya.display <- false |> Some
+        //                             )
+        // let raXAxe =  ResizeArray<ChartJs.Chart.ChartXAxe>()     
+        // raXAxe.Add(chartXAxeFirst)
+        // raXAxe.Add(chartXAxeFirst)
+        let cScales =  jsOptions<ChartJs.Chart.ChartScales>(fun sc -> 
+                                    sc.yAxes <- raYAxe |> Some
+                                    // sc.xAxes <- raXAxe |> Some
+                                    // sc.gridLines < - 
+                                    )
+        let cOptions =  jsOptions<ChartJs.Chart.ChartOptions>(fun co -> 
+                                    co.scales <- cScales |> Some
+                                    )
+        jsOptions<ChartComponentProps>(fun o -> 
+                o.data   <- chartNodesData |> ChartData.ofT
+                o.options <- cOptions |> Some
+                o.legend <- clo |> Some 
+                ); 
+                
+    let chartTransProps = chartProps chartTransData false 0.
+
+    div [ Class "row" ] 
+        [
+            div [ Class "col-md-12 col-lg-6" ] 
+                [
+                    Ibox.btRow "Nodes / Transaction" false [
+                         ofImport "Bar" "react-chartjs-2" chartNodesProps []
+                    ]
+                   
+                ]
+            div [ Class "col-md-12 col-lg-6" ] 
+                [
+                    Ibox.btRow "Transaction Volume" false [
+                         ofImport "Line" "react-chartjs-2" chartTransProps []
+                    ]
+                   
+                ]
+        ]
+let countryInfos =
+    [|
+        {   Abbreviation = RU
+            Name         = "Russia"
+            CountOfNodes = 1u
+            BackgroundColor = "#1ab394" }
+        {   Abbreviation = GB
+            Name         = "United Kingdom"
+            CountOfNodes = 7u 
+            BackgroundColor = "#ed5565" }
+        {   Abbreviation = US
+            Name         = "USA"
+            CountOfNodes = 3u 
+            BackgroundColor = "#FFCE56" }
+        {   Abbreviation = CN
+            Name         = "China"
+            CountOfNodes = 4u 
+            BackgroundColor = "#23c6c8" }
+        {   Abbreviation = AU
+            Name         = "Australia"
+            CountOfNodes = 5u 
+            BackgroundColor = "#1c84c6" }
+    |]
+
+let labels: U2<string,string []> [] = countryInfos |> Array.map (fun ci -> ci.Name |> U2.Case1)
+let dataCountry: CountryMap = countryInfos |> Array.map (fun ci -> ci.Name ==> Some ci.CountOfNodes ) |> createObj |> unbox
+
+              
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
-    let data1 = [| US, 2; GB, 5; RU, 1; CN, 4; AU, 1; |]
-    // let tt = t data1
-    let dataCountry:CountryMap = {  US = Some 2 ;
-                                    GB = Some 5;
-                                    RU = Some 1;
-                                    CN = Some 4
-                                    AU = Some 1 } 
+    let clusters = countryInfos
     div [  ]
         [  
-            
-    
-
-           clusterMap dataCountry
-           dashboardView data1.Length
-            // str "Cluster"
-            // match model.ClusterMembership with 
-            // | Some clusterMembership ->
-            //     // yield str "Cluster Membership" 
-            //     yield clusterView clusterMembership (ClustersMsg >> dispatch)
-            // | None -> ()
-
-             
+           dashboardView clusters.Length
+           testNetView clusters   
+           clusterMap clusters        
             
         ]
 
+// type Country2 = Abbr of string
 
-// let clusterNodes clusterMembership dispatch = 
-    
-    
-//     let rows = 
-//             clusterMembership.Nodes
-//             |> Seq.map (fun node -> 
-//                 tr [] [ td [] (nodeNameSpans node.Key.NId)
-                                
-//                         td [] [ node.Key.Chains.Count |> string |> str ]
-//                         td [] [ node.Key.Endpoint.IP |> string |> str ]
-//                         td [] [ node.Key.Endpoint.Port |> string |> str ]
-//                         td [] [ node.Key.Cluster |> string |> str]
-//                         td [] 
-//                            [
-//                                span [ Class "label label-active" ]
-//                                     [
-//                                         node.Value |> string |> str ]
-//                                     ]
-                                
-//                         td [] [ nodeViewBtn ] ])
-//             |> Seq.toList
-//     Ibox.btRow "Nodes" false
-//             [
-//                 div [ Class "table-responsive" ]//table-responsive
-//                     [
-//                         comE table 
-//                             [
-//                                 thead [][
-//                                     tr[][
-//                                         th [][str "Node" ]
-//                                         th [][str "Chains" ]
-//                                         th [][str "IP" ]
-//                                         th [][str "Port" ]
-//                                         th [][str "Cluster" ]
-//                                         th [][str "Status" ]
-//                                         th [][str "Action" ]
-//                                         // th [][str "GAS USED" ]
-//                                         // th [ Class "text-center"  ][str "VALUE" ]
-//                                     ]
-//                                 ]
-//                                 tbody [ ] 
-//                                       rows
-                              
-//                     ]]
-//     ]
+// let countries: Country2[] = [| Abbr "UK"; Abbr "US" |]
 
 
-// let clBody (cl: ACCluster) = 
-//     div [ ]
-//         [
-//             h2 []
-//                    [ str ( "UUID: " + cl.CId.ToString()) ]
-//             div [ Class "stat-percent font-bold text-info" ]
-//                 [
-//                 ]
-//             small []
-//                   [
-//                       str "Main"
-//                   ]  
-//         ]    
-// let clusterInfo (cl: ACCluster) =
+// let getAbbr (Abbr abbr) = abbr 
 
-//     div [ Class "ibox float-e-margins animated fadeInUp" ]
-//                         [ div [ Class "ibox-title" ]
-//                             [ h5 [ ]
-//                                 [ str "Cluster Info" ] 
-//                               span [ Class "label label-primary pull-right" ]
-//                                     [str "active"]
-//                               ] 
-//                           Ibox.iboxContent false [clBody cl]]
-// let nodesCount = 
-//     Ibox.inner "Nodes" false
-//                 [
-                    
-//                     h1 []
-//                        [ str "1" ]
-//                     div [ Class "stat-percent font-bold text-info" ]
-//                         [
-//                         ]
-//                     small []
-//                           [
-//                               str "All"
-//                           ]  
-                        
-//         ]
+// let countyAbbrs = countries |> Array.map (fun c -> getAbbr c)
+
+// let i = 1
+// let o = i :> obj
+
+// let box a = a :> obj
+// let unbox<'T> (o: obj) = o :?> 'T 

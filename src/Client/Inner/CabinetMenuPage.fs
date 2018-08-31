@@ -2,7 +2,8 @@ module Client.Cabinet
 
 open Shared
 open Shared.ViewModels.ChainNetwork
-
+open ReactBootstrap
+open Client.Helpers
 
 type MenuPage =
     | Dashboard
@@ -14,10 +15,13 @@ type MenuPage =
     | Node
     with static member Default = Clusters  
 
+
 type Msg =
     | ClustersMsg       of ClustersMsg
     | NodesMsg  
     | ChainsMsg    
+    | ChainsPaginMsg    of int
+    | NodesPaginMsg    of int
     | AccountsMsg
     | ServerMsg         of ServerMsg
 and ServerMsg =
@@ -33,3 +37,6 @@ and ServerMsg =
     // | GetTransactionsCompleted      of ViewModels.ETransaction list
 and ClustersMsg = 
     | SelectCluster             of ACClusterId
+
+// and ChainsPaginMsg = 
+//     | ChainsPaginMsg             of Paginate

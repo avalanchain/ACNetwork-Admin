@@ -23,6 +23,7 @@
     <Compile Include="Components/Ibox.fs" />
     <Compile Include="Components/FormHelpers.fs" />
     <Compile Include="Components/Footer.fs" />
+    <Compile Include="Components/Pagination.fs" />
     <Compile Include="Inner/CabinetMenuPage.fs" />
     <Compile Include="Page.fs" />
     <Compile Include="LoginFlow/LoginCommon.fs" />

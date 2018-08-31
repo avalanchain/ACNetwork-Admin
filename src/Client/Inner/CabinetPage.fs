@@ -38,7 +38,21 @@ let init authToken =
                     Customer            = None
                     Clusters            = []
                     ClusterMembership   = None
-                    ActiveNode          = None
+                    ActiveNode          =  {
+                        ANode               = None
+                        ChainsPagination    = { Page    = 1 
+                                                Total   = 8
+                                                MaxSize = 5}
+                        
+                     } 
+                    ActiveCluster       =  {
+                        ACluster            = None
+                        NodesPagination     = { Page    = 1 
+                                                Total   = 8
+                                                MaxSize = 5}
+                        
+                     } 
+                    
     }
     // let cmdGetCryptoCurrencies      = cmdServerCabinetCall (ServerProxy.cabinetApi.getCryptoCurrencies) () GetCryptoCurrenciesCompleted "getCryptoCurrencies()"
     // let cmdGetTokenSale             = cmdServerCabinetCall (ServerProxy.cabinetApi.getTokenSale) () GetTokenSaleCompleted "getTokenSale()"
@@ -61,10 +75,15 @@ let update (msg: Msg) model : Model * Cmd<ClientMsg> =
         match msg_ with
         | GetCustomerCompleted customer         -> { model with Customer = Some customer } , Cmd.none
         | GetClustersCompleted clusters         -> { model with Clusters = clusters } , Cmd.none 
-        | UpdateClusterMembershipCompleted cm   -> { model with ClusterMembership = Some cm }, Cmd.none
+        | UpdateClusterMembershipCompleted cm   -> { model with ClusterMembership = Some cm
+                                                                ActiveCluster = { model.ActiveCluster with ACluster = Some cm} }, Cmd.none
         // | ReplaceMe -> model , Cmd.none
     | NodesMsg -> failwith "Not Implemented"
     | ChainsMsg -> failwith "Not Implemented"
+    | ChainsPaginMsg msg_ -> 
+                { model with ActiveNode = { model.ActiveNode with ChainsPagination = { model.ActiveNode.ChainsPagination with Page = msg_} } }, Cmd.none
+    | NodesPaginMsg msg_ -> 
+                { model with ActiveCluster = { model.ActiveCluster with NodesPagination = { model.ActiveCluster.NodesPagination with Page = msg_} } }, Cmd.none            
     | AccountsMsg -> failwith "Not Implemented"
         
 let view (page: Cabinet.MenuPage) (model: Model) (dispatch: Msg -> unit) = 

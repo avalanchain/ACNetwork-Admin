@@ -4,6 +4,7 @@ open Fable.Helpers.React
 open Fable.Helpers.React.Props
 // open ClientMsgs
 open Fable
+open Fable.Core
 open Shared.ViewModels
 open Fable.DateFunctions
 open System
@@ -11,6 +12,7 @@ open Fable.Import.React
 open Fable.Core.JsInterop
 open Shared
 open System.Numerics
+open ReactChartJs2
 
 module Option = 
     let map2 f a b = match a, b with    | Some a, Some b -> f a b |> Some 
@@ -36,6 +38,37 @@ let inline comF<'P> (com: React.Component<'P>) (propsFunc: 'P -> unit) (children
 let inline comE<'P> (com: React.Component<'P>) (children: ReactElement seq): ReactElement =
     createElement(com, createEmpty<'P>, children)
 
+let chartPoint v = jsOptions<ChartJs.Chart.ChartPoint>(fun cp -> 
+                            cp.x <- v |> U3.Case1 |> Some
+                            cp.y <- v |> U3.Case1 |> Some
+                            )
+
+let chartProps chartData (isLegend:bool) height = 
+        let cLegOpt =  jsOptions<ChartJs.Chart.ChartLegendOptions>(fun clo -> 
+                            clo.position <- ChartJs.Chart.PositionType.Bottom |> Some
+                            )
+        let cTicks = jsOptions<ChartJs.Chart.TickOptions>(fun ct -> 
+                                    ct.beginAtZero <- true |> Some
+                                    )                    
+        let chartYAxe = jsOptions<ChartJs.Chart.ChartYAxe>(fun cya -> 
+                                    cya.ticks <- cTicks |> Some
+                                    )
+                     
+        let ra =  ResizeArray<ChartJs.Chart.ChartYAxe>()     
+        ra.Add(chartYAxe)  
+
+        let sc =  jsOptions<ChartJs.Chart.ChartScales>(fun sc -> 
+                                    sc.yAxes <- ra |> Some
+                                    )
+        let co =  jsOptions<ChartJs.Chart.ChartOptions>(fun co -> 
+                                    co.scales <- sc |> Some
+                                    )
+        jsOptions<ChartComponentProps>(fun o -> 
+                o.data   <- chartData |> ChartData.ofT
+                o.options <- co |> Some
+                o.height <- if height = 0. then None else (height |> Some)
+                o.legend <- if isLegend then (cLegOpt |> Some) else None
+                ); 
 
 let iboxSpinner = 
     div [ Class "sk-spinner sk-spinner-double-bounce" ]
@@ -73,3 +106,9 @@ let fc = "font-capitalize"
 
 
 let txtCenter = "text-center"
+
+type Paginate = {
+    Page    : int
+    Total   : int
+    MaxSize : int
+}

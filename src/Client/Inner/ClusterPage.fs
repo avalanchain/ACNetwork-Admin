@@ -157,15 +157,18 @@ let clusterChartProps (nodes: Map<ACNode,ACNodeState>) =
 
     let clo = jsOptions<ChartJs.Chart.ChartLegendOptions>(fun clo -> 
                             clo.position <- ChartJs.Chart.PositionType.Bottom |> Some
-                            clo.display <-  None)
+                            clo.display  <- None
+                            )
 
     jsOptions<ChartComponentProps>(fun o -> 
         o.data   <- chartJsData |> ChartData.ofT
         o.legend <- clo |> Some ); 
 /// 
-let clusterNodes clusterMembership dispatch = 
+let clusterNodes model clusterMembership dispatch = 
     
     
+    let ndPagin = model.ActiveCluster.NodesPagination
+    let onclickFun page =  fun _ -> page |> NodesPaginMsg |> dispatch
     let rows = 
             clusterMembership.Nodes
             |> Seq.map (fun node -> 
@@ -206,24 +209,72 @@ let clusterNodes clusterMembership dispatch =
                                 tbody [ ] 
                                       rows
                               
-                    ]]
+                            ]
+                        Client.Pagination.view ndPagin onclickFun
+                    ]
     ]
 
 
-let clBody (cl: ACCluster) = 
-    div [ ]
-        [
-            h2 []
-                   [ str ( "UUID: " + cl.CId.ToString()) ]
-            div [ Class "stat-percent font-bold text-info" ]
-                [
-                ]
-            small []
-                  [
-                      str "Main"
-                  ]  
-        ]    
-let clusterInfo (cl: ACCluster) =
+
+let transactionInfo (cl: ACCluster) =
+    let chartTrValues = [| 414.;124.;764.;144.;95.|] 
+    let chartColor: ChartJs.Chart.ChartColor =  "#ed5565" |> U4.Case1
+    let chartColorBack: ChartJs.Chart.ChartColor =  "#f37280" |> U4.Case1
+    let datasetsTr2 = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
+        o.label <- "Transactions" |> Some
+        o.data <- chartTrValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
+        o.backgroundColor <- chartColorBack |> U2.Case1 |> Some
+        o.borderColor <- chartColor |> U2.Case1 |> Some
+        // o.yAxisID <- "B" |> Some
+        )   
+    let chartTransData: ChartJs.Chart.ChartData = {
+        labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018" |] |> Array.map U2.Case1  
+        datasets = [| datasetsTr2 |] 
+    }
+    let chartTransProps = chartProps chartTransData false 72.
+    Ibox.btRow "Transactions" false [
+                         ofImport "Line" "react-chartjs-2" chartTransProps []
+                    ]
+
+let clBody (cms : ACClusterMembership) = 
+    div [ Class "row" ]
+                        [
+                            div [ Class ("col-md-6 " ) ]
+                                [
+                                    h2 [ ]
+                                       [ str ("Nodes: " + (string cms.Nodes.Count)) ]
+                                    // h1 [ ]
+                                    //    [ str (string cms.Nodes.Count) ]
+                                    div [ Class "stat-percent font-bold text-info" ]
+                                        [
+                                        ]
+                                    div [ ]
+                                        [
+                                            span [ Class "text-muted m-t-xs" ]
+                                              [ 
+                                             h2 [ ]
+                                                 [ 
+                                                b [ ]
+                                                    [ str "UUID: " ]
+                                                small [ Class  txtN]
+                                                  [str (cms.Cluster.CId.ToString()) ] 
+                                                div [] 
+                                                    [
+                                                        small []
+                                                              [
+                                                                  str "Zone 1"
+                                                              ]  
+                                                    ] 
+                                                
+                                                  ]]
+                                        ]   
+                                 ]
+                            div [ Class "col-md-6" ]
+                                [
+                                    ofImport "Doughnut" "react-chartjs-2" (clusterChartProps cms.Nodes) []
+                                ]
+                        ]  
+let nodesCount (cms : ACClusterMembership) =
 
     div [ Class "ibox float-e-margins animated fadeInUp" ]
                         [ div [ Class "ibox-title" ]
@@ -232,37 +283,10 @@ let clusterInfo (cl: ACCluster) =
                               span [ Class "label label-primary pull-right" ]
                                     [str "active"]
                               ] 
-                          Ibox.iboxContent false [clBody cl]]
-let nodesCount (cms : ACClusterMembership) = 
-    Ibox.inner "Nodes" false
-                [
-                    div [ Class "row" ]
-                        [
-                            div [ Class ("col-md-6 " + txtCenter) ]
-                                [
-                                    h2 [ ]
-                                       [ str "Nodes in Cluster" ]
-                                    h1 [ ]
-                                       [ str (string cms.Nodes.Count) ]
-                                    div [ Class "stat-percent font-bold text-info" ]
-                                        [
-                                        ]
-                                    small []
-                                          [
-                                              str "All"
-                                          ]  
-                                 ]
-                            div [ Class "col-md-6" ]
-                                [
-                                    ofImport "Doughnut" "react-chartjs-2" (clusterChartProps cms.Nodes) []
-                                ]
-                        ]
-                    
-                    
-                        
-        ]
+                          Ibox.iboxContent false [clBody cms]]
 
-let clusterView clusterMembership dispatch = 
+
+let clusterView model clusterMembership dispatch = 
     div [ Class "row" ]
         [
             div [ Class "col-md-12 col-lg-6" ]
@@ -271,33 +295,24 @@ let clusterView clusterMembership dispatch =
                 ]
             div [ Class "col-md-12 col-lg-6" ]
                 [
-                    clusterInfo clusterMembership.Cluster
+                    transactionInfo clusterMembership.Cluster
                 ]
             div [ Class "col-lg-12" ]
                 [
-                    clusterNodes clusterMembership dispatch
+                    clusterNodes model clusterMembership dispatch
                 ]
         ]
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
     div [  ]
         [  
             // str "Cluster"
-            match model.ClusterMembership with 
+            match model.ActiveCluster.ACluster with 
             | Some clusterMembership ->
                 // yield str "Cluster Membership" 
-                yield clusterView clusterMembership (ClustersMsg >> dispatch)
+                yield clusterView model clusterMembership dispatch
             | None -> ()
 
-            yield Ibox.btRow "Chart" false 
-                    [
-                        div [] []
-                        // ofImport "Doughnut" "react-chartjs-2" chartProps []
-
-                        // ChartsPG.lineChartSample()
-                        // // ChartsPG.radialChartSample()
-                        // ofFunction GaugeChart { width = 500 } [ p[] [ str "asasdasdasdasd"]]
-                        // GaugeChart { width = 500 }
-                    ]
+           
             
         ]
 

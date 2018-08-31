@@ -48,7 +48,7 @@ let chainType (chain:ChainDefs.ChainType) =
 
 let ndBody (node: ACNode) = 
     div [ ]
-        [   div [ Class "m-l-md" ]
+        [   div [  ]
                 [
                     div [ Class "row" ]
                               [ 
@@ -56,7 +56,7 @@ let ndBody (node: ACNode) =
                                     [ 
                                         span [ Class "text-muted m-t-xs" ]
                                           [ 
-                                             h3 [ ]
+                                             h2 [ ]
                                                  [ 
                                                 b [ ]
                                                     [ str "ID: " ]
@@ -81,7 +81,7 @@ let ndBody (node: ACNode) =
             
             
             
-            div [ Class "p-xs m-l-sm" ]
+            div [  ]
                 [ div [ Class "row" ]
                       [ 
                         div [ Class "col-md-4" ]
@@ -128,26 +128,6 @@ let ntrxCount (count: int) =
                           ] 
                       Ibox.iboxContent false [body]]
 // // [ str "First"]
-let pagBtn name cl pos = 
-    comF button (fun b -> //b.bsSize <- Sizes.Sm |> Some 
-                          b.bsClass <- "btn btn-default btn-sm " + cl|> Some )[ str name ]
-let paginationButtons act sz = 
-    let size = sz
-    let active = act
-    let pageStart = active - 2
-    let pageEnd = active + 2
-
-    comE buttonGroup [
-        yield pagBtn "First" "" 1
-        yield pagBtn "Prev" "" (if active > 1 then (active - 1) else active)
-        if pageStart > 0 then yield pagBtn ((active - 2) |> string) "" (active - 2)
-        if pageStart + 1 > 0 then yield pagBtn ((active - 1) |> string) "" (active - 1)
-        yield pagBtn ((active |> string)) "active" 1
-        if pageEnd - 2 < size then yield pagBtn ((active + 1) |> string) "" (active + 1)
-        if pageEnd - 1 < size then yield pagBtn ((active + 2) |> string) "" (active + 2)
-        yield pagBtn "Next" "" (if size > active then (active + 1) else active)
-        yield pagBtn "Last" "" size
-    ]
 
 
 let onclickFun = fun _ -> ()//cluster.CId |> SelectCluster |> dispatch 
@@ -158,8 +138,9 @@ let showBtn =
                           )
                         [ str "show" ]
 
-let chains (chs:Set<ChainDefs.ChainDef>) = 
-    // let items = 
+let chains (chs:Set<ChainDefs.ChainDef>) (model:Model) dispatch = 
+    let chPagin = model.ActiveNode.ChainsPagination
+    let onclickFun page =  fun _ -> page |> ChainsPaginMsg |> dispatch
     let rows = 
             chs
             |> Seq.map (fun ts -> 
@@ -198,26 +179,7 @@ let chains (chs:Set<ChainDefs.ChainDef>) =
                               
                          ]
 
-                        // BootstrapTable (fun t -> t.data <- ResizeArray(chs|> Seq.map (fun kv -> kv :> obj))
-                        //                          t.pagination <- Some true
-                        //                          t.striped <- Some true)
-                        //         [
-                        //             TableHeaderColumn (fun p -> p.dataField <- Some "ChainDefs.Uid"
-                        //                                         // p.dataSort <- Some true
-                        //                                         p.isKey <- Some true
-                        //                                         // p.width <- Some "90"
-                        //                                         ) [ str "Id"] 
-                        //         ]
-
-                        paginationButtons 1 8
-
-                        // comF pagination (fun p ->   p.bsSize <- Sizes.Sm |> Some
-                        //                             p.``type`` <- "Symbol(react.context)" |> Some
-                        //                             p.onSelect <- React.ReactEventHandler(fun _ -> Browser.console.log "Selected") |> Some  
-                        //                             p.onClick <- React.MouseEventHandler(fun _ -> Browser.console.log "Selected Item") |> Some 
-                        //                           )   
-                        //                             [ 
-                        //                             ]
+                        Client.Pagination.view chPagin onclickFun
                     ]
     ]
 let nodeInfo (node: ACNode) = 
@@ -230,7 +192,7 @@ let nodeInfo (node: ACNode) =
                           ] 
                       Ibox.iboxContent false [ndBody node]]
 
-let nodeView clusterMembership dispatch = 
+let nodeView clusterMembership model dispatch = 
     let nd = node clusterMembership.Nodes
     div [ Class "row" ]
         [
@@ -244,7 +206,7 @@ let nodeView clusterMembership dispatch =
                 ]
             div [ Class "col-md-12 " ]
                 [
-                    (chains nd.Chains)
+                    (chains nd.Chains model  dispatch)
                 ]
         ]
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
@@ -254,6 +216,6 @@ let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
             match model.ClusterMembership with 
             | Some clusterMembership ->
                 // yield str "Cluster Membership" 
-                yield nodeView clusterMembership (ClustersMsg >> dispatch)
+                yield nodeView clusterMembership model dispatch
             | None -> ()
         ]

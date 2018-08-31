@@ -727,6 +727,9 @@ pre {
     background-color: #C7413E;
     border-color: #C7413E;
 }
+.fbold{
+    font-weight: bold
+}
 
 /* body.mini-navbar .navbar-static-side {
     -webkit-transition: width 200ms linear;

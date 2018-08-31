@@ -9,6 +9,7 @@ open Web3Types
 open System.Transactions
 open Shared.ViewModels
 open Shared.ViewModels.ChainNetwork
+open Client.Helpers
 
 type Model = {
     Auth                : AuthModel
@@ -17,11 +18,21 @@ type Model = {
 
     Clusters            : ACCluster list
     ClusterMembership   : ACClusterMembership option
-    ActiveNode          : ACNodeId option 
+    ActiveNode          : ActiveNode  
+    ActiveCluster       : ActiveCluster
+       
 
 }
-// and PurchaseTokenModel = {
-// }
+and ActiveNode = {
+    ANode               : ACNodeId option
+    ChainsPagination    : Paginate
+}
+and ActiveCluster = {
+    ACluster            : ACClusterMembership option
+    NodesPagination     : Paginate
+}
+
+
 
 
 type TostrStatus = Success | Warning | Err | Info

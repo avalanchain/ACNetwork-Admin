@@ -17,11 +17,8 @@ type Model = {
     // Loading     : bool  
 
     Clusters            : ACCluster list
-    // ClusterMembership   : ACClusterMembership option
     ActiveNode          : ActiveNode  
     ActiveCluster       : ActiveCluster
-       
-
 }
 and ActiveNode = {
     ANode               : ACNodeId option

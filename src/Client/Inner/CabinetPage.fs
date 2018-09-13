@@ -37,17 +37,14 @@ let init authToken =
     let model = {   Auth                = { Token = authToken }
                     Customer            = None
                     Clusters            = []
-                    // ClusterMembership   = None
-                    ActiveNode          = {
-                        ANode               = None
-                        ChainsPagination    = { Page    = 1 
-                                                Total   = 8
-                                                MaxSize = 5 } } 
-                    ActiveCluster       = {
-                        ACluster            =   None
-                        NodesPagination     = { Page    = 1 
-                                                Total   = 8
-                                                MaxSize = 5 } } 
+                    ActiveNode          = { ANode               = None
+                                            ChainsPagination    = { Page    = 1 
+                                                                    Total   = 8
+                                                                    MaxSize = 5 } } 
+                    ActiveCluster       = { ACluster            =   None
+                                            NodesPagination     = { Page    = 1 
+                                                                    Total   = 8
+                                                                    MaxSize = 5 } } 
                     
     }
     // let cmdGetCryptoCurrencies      = cmdServerCabinetCall (ServerProxy.cabinetApi.getCryptoCurrencies) () GetCryptoCurrenciesCompleted "getCryptoCurrencies()"

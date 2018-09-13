@@ -50,37 +50,32 @@ let ndBody (node: ACNode) =
     div [ ]
         [   div [  ]
                 [
-                    div [ Class "row" ]
-                              [ 
-                                div [ Class "col-md-4" ]
-                                    [ 
-                                        span [ Class "text-muted m-t-xs" ]
-                                          [ 
-                                             h2 [ ]
-                                                 [ 
-                                                b [ ]
-                                                    [ str "ID: " ]
-                                                span [ Class  txtN]
-                                                  (nodeNameSpans node.NId ) ]]
-                                      
-                                    ]
-                                div [ Class "col-md-8" ]
-                                    [ 
-                                        span [ Class ("m-t-xs " + txtM )]
-                                          [ 
-                                              h3 [ ]
-                                                 [ b [ ]
-                                                     [ str "Cluster: " ]
-                                                   a [ Href (toHash clPage) 
-                                                       OnClick goToUrl ]
-                                                     [ node.Cluster.Value |> string |> str ]]
-                                            // str (node.Cluster.Value.ToString()) 
-                                            ]
-                                    ]
-                             ]]
-            
-            
-            
+                   
+                    span [ Class "text-muted m-t-xs" ]
+                      [ 
+                         h2 [ ]
+                             [ 
+                            b [ ]
+                                [ str "ID: " ]
+                            span [ Class  txtN]
+                              (nodeNameSpans node.NId ) ]]
+                      
+                ]
+            div [ Class "hr-line-dashed" ]  []
+            div [  ]
+                [  
+                    span [ Class ("m-t-xs " + txtM )]
+                      [ 
+                          h3 [ ]
+                             [ b [ ]
+                                 [  str "Cluster: " ]
+                               a [  Href (toHash clPage) 
+                                    OnClick goToUrl ]
+                                 [ node.Cluster.Value |> string |> str ]
+                              ]
+                        ]
+                 ]
+            div [ Class "hr-line-dashed" ]  []
             div [  ]
                 [ div [ Class "row" ]
                       [ 
@@ -95,39 +90,48 @@ let ndBody (node: ACNode) =
                                 b [ ]
                                   [ str "Port: " ]
                                 str (node.Endpoint.Port.ToString())
+                            ] ] ]
+            
+            div [ Class "hr-line-dashed" ]  []     
+            div [  ]
+                [  
+                    div [ Class "row" ]
+                      [ 
+                        div [ Class "col-md-4" ]
+                            [ 
+                                b [ ]
+                                  [ str "Transactions: " ]
+                                str "249543" 
                             ]
-                     ]
-                                    ]
+                        div [ Class "col-md-8" ]
+                            [ 
+                                b [ ]
+                                  [ str "Blocks: " ]
+                                str "115"
+                            ] ]
+                 ]     
+
                   ]
 
-let ntrxCount (count: int) = 
-    // Ibox.inner "Transactions" false
-    let body = 
-        div [ ]
-            [
-                h1 []
-                   [ str (count.ToString()) ]
-                div [ Class "stat-percent font-bold text-info" ]
-                    [
+let transactionInfo (cl: ACCluster) =
+    let chartTrValues = [| 414.;124.;764.;144.;95.;844.;195.|] 
+    let chartColor: ChartJs.Chart.ChartColor =  "#337ab7" |> U4.Case1
+    let chartColorBack: ChartJs.Chart.ChartColor =  "#4faeff" |> U4.Case1
+    let dataset = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
+        o.label <- "Transactions" |> Some
+        o.data <- chartTrValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
+        o.backgroundColor <- chartColorBack |> U2.Case1 |> Some
+        o.borderColor <- chartColor |> U2.Case1 |> Some
+        // o.yAxisID <- "B" |> Some
+        )   
+    let chartTransData: ChartJs.Chart.ChartData = {
+        labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018"; "06/01/2018"; "07/01/2018" |] |> Array.map U2.Case1  
+        datasets = [| dataset |] 
+    }
+    let chartTransProps = chartProps chartTransData false 72.
+    Ibox.btRow "Transaction History" false [
+                         ofImport "Line" "react-chartjs-2" chartTransProps []
                     ]
-                div [ Class "stat-percent font-bold text-info" ]
-                    [ str "20%"
-                      i [ Class "fa fa-level-up" ]
-                        [ ] ]
-                small []
-                      [
-                          str "All"
-                      ]  
-            ]
-    div [ Class "ibox float-e-margins animated fadeInUp" ]
-                    [ div [ Class "ibox-title" ]
-                        [ h5 [ ]
-                            [ str "Transactions" ] 
-                          span [ Class "label label-success pull-right" ]
-                                [str "all time"]
-                          ] 
-                      Ibox.iboxContent false [body]]
-// // [ str "First"]
 
 
 let onclickFun = fun _ -> ()//cluster.CId |> SelectCluster |> dispatch 
@@ -196,13 +200,13 @@ let nodeView clusterMembership model dispatch =
     let nd = node clusterMembership.Nodes
     div [ Class "row" ]
         [
-            div [ Class "col-md-12 col-lg-4" ]
+            div [ Class "col-md-12 col-lg-6" ]
                 [
-                    ntrxCount nd.Chains.Count 
+                    nodeInfo nd  
                 ]
-            div [ Class "col-md-12 col-lg-8" ]
+            div [ Class "col-md-12 col-lg-6" ]
                 [
-                    nodeInfo nd
+                    transactionInfo clusterMembership.Cluster
                 ]
             div [ Class "col-md-12 " ]
                 [
@@ -212,8 +216,7 @@ let nodeView clusterMembership model dispatch =
 let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
     div [  ]
         [  
-            // str "Cluster"
-            match model.ClusterMembership with 
+            match model.ActiveCluster.ACluster with 
             | Some clusterMembership ->
                 // yield str "Cluster Membership" 
                 yield nodeView clusterMembership model dispatch

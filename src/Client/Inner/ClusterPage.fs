@@ -36,102 +36,6 @@ let nodeViewBtn =
                           )
                         [ str "Open Node" ]
 
-///////////CHART
-/// 
-module ChartsPG =
-    open Fable.Recharts   
-    open Fable.Recharts.Props
-    module R = Fable.Helpers.React
-    module P = R.Props
-
-    let margin t r b l =
-        Chart.Margin { top = t; bottom = b; right = r; left = l }
-
-    type [<Pojo>] Data =
-        { name: string; uv: int; pv: int; amt: int }
-    let data =
-        [| { name = "Page A"; uv = 4000; pv = 2400; amt = 2400 }
-           { name = "Page B"; uv = 3000; pv = 1398; amt = 2210 }
-           { name = "Page C"; uv = 2000; pv = 9800; amt = 2290 }
-           { name = "Page D"; uv = 2780; pv = 3908; amt = 2000 }
-           { name = "Page E"; uv = 1890; pv = 4800; amt = 2181 }
-           { name = "Page F"; uv = 2390; pv = 3800; amt = 2500 }
-           { name = "Page G"; uv = 3490; pv = 4300; amt = 2100 }
-        |]
-
-    let lineChartSample() =
-        lineChart
-            [ margin 5. 20. 5. 0.
-              Chart.Width 600.
-              Chart.Height 300.
-              Chart.Data data ]
-            [ line
-                [ Cartesian.Type Monotone
-                  Cartesian.DataKey "uv"
-                  P.Stroke "#8884d8"
-                  P.StrokeWidth 2. ]
-                []
-              cartesianGrid
-                [ P.Stroke "#ccc"
-                  P.StrokeDasharray "5 5" ]
-                []
-              xaxis [Cartesian.DataKey "name"] []
-              yaxis [] []
-              tooltip [] []
-            ]
-
-    type PieData = {
-        name: string
-        value: int
-    }
-    let pieData = [ {name = "Group A"; value = 400} 
-                    {name = "Group B"; value = 300}
-                    {name = "Group C"; value = 300}
-                    {name = "Group D"; value = 200} ];
-    let COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
-    let RADIAN = System.Math.PI / 180.;      
-
-    let radialChartSample() =
-        pieChart
-            [ margin 5. 20. 5. 0.
-              Chart.Width 600.
-              Chart.Height 300. ]
-            [ pie
-                [   Chart.Data data
-                    Chart.Cx 420.
-                    Chart.Cy 200.
-                    Chart.StartAngle 180.
-                    Chart.EndAngle 0.
-                    Chart.InnerRadius 60.
-                    Chart.OuterRadius 80.
-                    // Custom ("fill", "#8884d8")
-                    Polar.PaddingAngle 5. ]
-                [
-                    cell [ !!(Cell.Fill "#8884d8") ] []
-                ]
-            ]
-    
-
-type [<Pojo>] GaugeChartProps = { width: int }
-let GaugeChart : GaugeChartProps -> ReactElement = importDefault "../GaugeChart.jsx"
-// let GaugeChart : unit -> ReactElement = import "GaugeChart" "../GaugeChart.jsx"
-
-// let datasets = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
-//     o.data <- [| 300.; 50.; 100. |] |> U2.Case1 |> Some
-//     o.backgroundColor <- [| "#FF6384";  |] |> Array.map U4.Case1 |> U2.Case2 |> Some //"#36A2EB"; "#FFCE56"
-//     o.hoverBackgroundColor <- [| "#FF6484"; |] |> U2.Case2 |> Some // "#36A3EB"; "#FFCF56" 
-// )
-
-// let chartJsData: ChartJs.Chart.ChartData = {
-//     labels = [| "Red"; "Green"; "Yellow" |] |> Array.map U2.Case1  
-//     datasets = [| datasets |] 
-// }
-
-// let chartProps = jsOptions<ChartComponentProps>(fun o -> 
-//     o.data <- chartJsData |> ChartData.ofT ); 
-
-
 
 let clusterChartProps (nodes: Map<ACNode,ACNodeState>) =
     //nodeName node.Key.NId
@@ -217,9 +121,9 @@ let clusterNodes model clusterMembership dispatch =
 
 
 let transactionInfo (cl: ACCluster) =
-    let chartTrValues = [| 414.;124.;764.;144.;95.|] 
-    let chartColor: ChartJs.Chart.ChartColor =  "#ed5565" |> U4.Case1
-    let chartColorBack: ChartJs.Chart.ChartColor =  "#f37280" |> U4.Case1
+    let chartTrValues = [| 4148.;1246.;7643.;14422.;9522.;6422.;7522.|] 
+    let chartColor: ChartJs.Chart.ChartColor =  "#337ab7" |> U4.Case1
+    let chartColorBack: ChartJs.Chart.ChartColor =  "#4faeff" |> U4.Case1
     let datasetsTr2 = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
         o.label <- "Transactions" |> Some
         o.data <- chartTrValues |> Array.map(fun fl -> fl |> chartPoint ) |> U2.Case2 |> Some
@@ -228,11 +132,11 @@ let transactionInfo (cl: ACCluster) =
         // o.yAxisID <- "B" |> Some
         )   
     let chartTransData: ChartJs.Chart.ChartData = {
-        labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018" |] |> Array.map U2.Case1  
+        labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018"; "06/01/2018"; "07/01/2018" |] |> Array.map U2.Case1  
         datasets = [| datasetsTr2 |] 
     }
     let chartTransProps = chartProps chartTransData false 72.
-    Ibox.btRow "Transactions" false [
+    Ibox.btRow "Transaction History" false [
                          ofImport "Line" "react-chartjs-2" chartTransProps []
                     ]
 

@@ -99,14 +99,6 @@ let clusterMap clusters =
         )
 
     let chartJsData: ChartJs.Chart.ChartData = {
-        // let countrNames name = 
-        //     match name with 
-        //     | RU -> "Russia"
-        //     | GB -> "United Kingdom"
-        //     | US -> "USA"
-        //     | CN -> "China"
-        //     | AU -> "Australia"
-
         labels = chartLabels |> Array.map U2.Case1  
         datasets = [| datasets |] 
     }

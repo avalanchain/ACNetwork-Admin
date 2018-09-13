@@ -37,21 +37,17 @@ let init authToken =
     let model = {   Auth                = { Token = authToken }
                     Customer            = None
                     Clusters            = []
-                    ClusterMembership   = None
-                    ActiveNode          =  {
+                    // ClusterMembership   = None
+                    ActiveNode          = {
                         ANode               = None
                         ChainsPagination    = { Page    = 1 
                                                 Total   = 8
-                                                MaxSize = 5}
-                        
-                     } 
-                    ActiveCluster       =  {
-                        ACluster            = None
+                                                MaxSize = 5 } } 
+                    ActiveCluster       = {
+                        ACluster            =   None
                         NodesPagination     = { Page    = 1 
                                                 Total   = 8
-                                                MaxSize = 5}
-                        
-                     } 
+                                                MaxSize = 5 } } 
                     
     }
     // let cmdGetCryptoCurrencies      = cmdServerCabinetCall (ServerProxy.cabinetApi.getCryptoCurrencies) () GetCryptoCurrenciesCompleted "getCryptoCurrencies()"
@@ -75,7 +71,7 @@ let update (msg: Msg) model : Model * Cmd<ClientMsg> =
         match msg_ with
         | GetCustomerCompleted customer         -> { model with Customer = Some customer } , Cmd.none
         | GetClustersCompleted clusters         -> { model with Clusters = clusters } , Cmd.none 
-        | UpdateClusterMembershipCompleted cm   -> { model with ClusterMembership = Some cm
+        | UpdateClusterMembershipCompleted cm   -> { model with //ClusterMembership = Some cm
                                                                 ActiveCluster = { model.ActiveCluster with ACluster = Some cm} }, Cmd.none
         // | ReplaceMe -> model , Cmd.none
     | NodesMsg -> failwith "Not Implemented"

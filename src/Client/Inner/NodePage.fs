@@ -142,9 +142,9 @@ let showBtn =
                           )
                         [ str "show" ]
 
-let chains (chs:Set<ChainDefs.ChainDef>) (model:Model) dispatch = 
-    let chPagin = model.ActiveNode.ChainsPagination
-    let onclickFun page =  fun _ -> page |> ChainsPaginMsg |> dispatch
+let chains (chs:Set<ChainDefs.ChainDef>) (model:ActiveNode) dispatch = 
+    let chPagin = model.ChainsPagination
+    let onclickFun page =  fun _ -> page |> ChainsPagingMsg |> dispatch
     let rows = 
             chs
             |> Seq.map (fun ts -> 
@@ -200,25 +200,22 @@ let nodeView clusterMembership model dispatch =
     let nd = node clusterMembership.Nodes
     div [ Class "row" ]
         [
-            div [ Class "col-md-12 col-lg-6" ]
+            yield div [ Class "col-md-12 col-lg-6" ]
                 [
                     nodeInfo nd  
                 ]
-            div [ Class "col-md-12 col-lg-6" ]
+            yield div [ Class "col-md-12 col-lg-6" ]
                 [
                     transactionInfo clusterMembership.Cluster
                 ]
-            div [ Class "col-md-12 " ]
-                [
-                    (chains nd.Chains model  dispatch)
-                ]
-        ]
-let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
-    div [  ]
-        [  
-            match model.ActiveCluster.ACluster with 
-            | Some clusterMembership ->
-                // yield str "Cluster Membership" 
-                yield nodeView clusterMembership model dispatch
+            match model with 
+            | Some node -> yield div [ Class "col-md-12 " ]
+                            [    chains nd.Chains node dispatch ]
             | None -> ()
         ]
+
+let view model (dispatch: Cabinet.Msg -> unit) =
+    div [  ]
+        (match model.ActiveCluster with 
+            | Some ac -> [   nodeView ac.ACluster ac.ActiveNode dispatch ]
+            | None -> [] )

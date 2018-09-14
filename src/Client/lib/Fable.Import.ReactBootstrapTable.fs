@@ -5,7 +5,7 @@ open Fable.Core
 open Fable.Import.JS
 open Fable.Import.React
 open Fable.Helpers.React
-open Fable.Import.ReactHelpers
+open Client.Helpers
 
 module BootstrapTable =
 
@@ -132,8 +132,8 @@ module BootstrapTable =
     and [<AllowNullLiteral>] FetchInfo =
         abstract dataTotalSize: float option with get, set
 
-    and [<Import("BootstrapTable","react-bootstrap-table")>] BootstrapTable(props) =
-        inherit React.Component<BootstrapTableProps, obj>(props)
+    and [<AbstractClass>][<Import("BootstrapTable","react-bootstrap-table")>] BootstrapTable(props) =
+        inherit React.Component<BootstrapTableProps>(props)
 
     and [<RequireQualifiedAccess>] [<StringEnum>] DataAlignType = | Left | Center | Right | Start
 
@@ -196,15 +196,15 @@ module BootstrapTable =
         abstract getElement: Func<Func<ApplyFilterParameter, unit>, obj, ReactElement> option with get, set
         abstract customFilterParameters: obj option with get, set
 
-    and [<Import("TableHeaderColumn","react-bootstrap-table")>] TableHeaderColumn(props) =
-        inherit React.Component<TableHeaderColumnProps, obj>(props)
+    and [<AbstractClass>][<Import("TableHeaderColumn","react-bootstrap-table")>] TableHeaderColumn(props) =
+        inherit React.Component<TableHeaderColumnProps>(props)
 
     /// Helper functions
 
     let [<PassGenerics>] inline private rsCom<'T,[<Pojo>]'P,[<Pojo>]'S when 'T :> React.Component<'P,'S>> (propsUpdate: 'P -> unit) =
         let props = Fable.Core.JsInterop.createEmpty<'P>
         propsUpdate props
-        com<'T, 'P, 'S> (props) 
+        ofType<'T, 'P, 'S> (props) 
 
     let [<PassGenerics>] inline private rsCom0<'T,[<Pojo>]'P,[<Pojo>]'S when 'T :> React.Component<'P,'S>> = rsCom<'T, 'P, 'S> (ignore)
 

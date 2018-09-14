@@ -16,20 +16,24 @@ type Model = {
     Customer            : Customer option             
     // Loading     : bool  
 
-    Clusters            : ACCluster list
-    ActiveNode          : ActiveNode  
-    ActiveCluster       : ActiveCluster
-}
-and ActiveNode = {
-    ANode               : ACNodeId option
-    ChainsPagination    : Paginate
+    Clusters            : ACCluster list     
+    ActiveCluster       : ActiveCluster option
 }
 and ActiveCluster = {
-    ACluster            : ACClusterMembership option
+    ACluster            : ACClusterMembership
+    ActiveNode          : ActiveNode option
+
     NodesPagination     : Paginate
 }
-
-
+and ActiveNode = {
+    ANode               : ACNodeId
+     
+    ChainsPagination    : Paginate
+}
+// and ActiveNode = {
+//     ANode               : ACNodeId option
+//     ChainsPagination    : Paginate
+// }
 
 
 type TostrStatus = Success | Warning | Err | Info

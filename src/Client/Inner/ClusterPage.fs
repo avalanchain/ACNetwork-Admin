@@ -70,9 +70,7 @@ let clusterChartProps (nodes: Map<ACNode,ACNodeState>) =
 /// 
 let clusterNodes model clusterMembership dispatch = 
     
-    
-    let ndPagin = model.ActiveCluster.NodesPagination
-    let onclickFun page =  fun _ -> page |> NodesPaginMsg |> dispatch
+    let onclickFun page =  fun _ -> page |> NodesPagingMsg |> dispatch
     let rows = 
             clusterMembership.Nodes
             |> Seq.map (fun node -> 
@@ -95,7 +93,7 @@ let clusterNodes model clusterMembership dispatch =
             [
                 div [ Class "table-responsive" ]//table-responsive
                     [
-                        comE table 
+                        yield comE table 
                             [
                                 thead [][
                                     tr[][
@@ -114,7 +112,9 @@ let clusterNodes model clusterMembership dispatch =
                                       rows
                               
                             ]
-                        Client.Pagination.view ndPagin onclickFun
+                        match model.ActiveCluster with 
+                        | Some ac -> yield Client.Pagination.view (ac.NodesPagination) onclickFun
+                        | None -> ()
                     ]
     ]
 
@@ -142,42 +142,41 @@ let transactionInfo (cl: ACCluster) =
 
 let clBody (cms : ACClusterMembership) = 
     div [ Class "row" ]
+        [
+            div [ Class ("col-md-6 " ) ]
+                [
+                    h2 [ ]
+                       [ str ("Nodes: " + (string cms.Nodes.Count)) ]
+                    // h1 [ ]
+                    //    [ str (string cms.Nodes.Count) ]
+                    div [ Class "stat-percent font-bold text-info" ]
                         [
-                            div [ Class ("col-md-6 " ) ]
-                                [
-                                    h2 [ ]
-                                       [ str ("Nodes: " + (string cms.Nodes.Count)) ]
-                                    // h1 [ ]
-                                    //    [ str (string cms.Nodes.Count) ]
-                                    div [ Class "stat-percent font-bold text-info" ]
-                                        [
-                                        ]
-                                    div [ ]
-                                        [
-                                            span [ Class "text-muted m-t-xs" ]
-                                              [ 
-                                             h2 [ ]
-                                                 [ 
-                                                b [ ]
-                                                    [ str "UUID: " ]
-                                                small [ Class  txtN]
-                                                  [str (cms.Cluster.CId.ToString()) ] 
-                                                div [] 
-                                                    [
-                                                        small []
-                                                              [
-                                                                  str "Zone 1"
-                                                              ]  
-                                                    ] 
-                                                
-                                                  ]]
-                                        ]   
-                                 ]
-                            div [ Class "col-md-6" ]
-                                [
-                                    ofImport "Doughnut" "react-chartjs-2" (clusterChartProps cms.Nodes) []
-                                ]
-                        ]  
+                        ]
+                    div [ ]
+                        [
+                            span [ Class "text-muted m-t-xs" ]
+                              [ 
+                             h2 [ ]
+                                 [ 
+                                b [ ]
+                                    [ str "UUID: " ]
+                                small [ Class  txtN]
+                                  [str (cms.Cluster.CId.ToString()) ] 
+                                div [] 
+                                    [
+                                        small []
+                                              [
+                                                  str "Zone 1"
+                                              ]  
+                                  ]]]
+                        ]   
+                 ]
+            div [ Class "col-md-6" ]
+                [
+                    ofImport "Doughnut" "react-chartjs-2" (clusterChartProps cms.Nodes) []
+                ]
+        ]  
+
 let nodesCount (cms : ACClusterMembership) =
 
     div [ Class "ibox float-e-margins animated fadeInUp" ]
@@ -210,10 +209,10 @@ let view (model: Model) (dispatch: Cabinet.Msg -> unit) =
     div [  ]
         [  
             // str "Cluster"
-            match model.ActiveCluster.ACluster with 
-            | Some clusterMembership ->
+            match model.ActiveCluster with 
+            | Some ac ->
                 // yield str "Cluster Membership" 
-                yield clusterView model clusterMembership dispatch
+                yield clusterView model (ac.ACluster) dispatch
             | None -> ()
 
            

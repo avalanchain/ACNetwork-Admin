@@ -20,8 +20,8 @@ type Msg =
     | ClustersMsg       of ClustersMsg
     | NodesMsg  
     | ChainsMsg    
-    | ChainsPaginMsg    of int
-    | NodesPaginMsg    of int
+    | ChainsPagingMsg    of int
+    | NodesPagingMsg    of int
     | AccountsMsg
     | ServerMsg         of ServerMsg
 and ServerMsg =

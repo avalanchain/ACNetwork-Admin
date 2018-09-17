@@ -23,15 +23,12 @@
     <Compile Include="Inner/Entities/Customers/CustomersModel.fs" />
     <Compile Include="Inner/Entities/Customers/CustomersViews.fs" />
     <Compile Include="Inner/Entities/Customers/CustomersRepository.fs" />
-    <Compile Include="Inner/Entities/Customers/CustomersController.fs" />
     <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesModel.fs" />
     <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesViews.fs" />
     <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesRepository.fs" />
-    <Compile Include="Inner/Entities/CustomerPreferences/CustomerPreferencesController.fs" />
     <Compile Include="Inner/Entities/AuthTokens/AuthTokensModel.fs" />
     <Compile Include="Inner/Entities/AuthTokens/AuthTokensViews.fs" />
     <Compile Include="Inner/Entities/AuthTokens/AuthTokensRepository.fs" />
-    <Compile Include="Inner/Entities/AuthTokens/AuthTokensController.fs" />
     <Compile Include="Inner/Router.fs" />
 
     <Content Include="static/*.*">

@@ -2,7 +2,7 @@ group Server
     storage: none
     source https://api.nuget.org/v3/index.json
 
-    nuget FSharp.Core
+    nuget FSharp.Core = 4.5.2
     nuget FSharp.Control.Reactive
     nuget Saturn
     nuget Fable.Remoting.Giraffe ~> 2.6

@@ -53,8 +53,6 @@ let browserRouter publicPath = scope {
     forward "" (bundle publicPath) //public/bundle.js 
     forward "" defaultView // Use the default view
 
-    forward "/customers" Customers.Controller.resource
-    forward "/customerpreferences" CustomerPreferences.Controller.resource
 }
 
 //Other scopes may use different pipelines and error handlers

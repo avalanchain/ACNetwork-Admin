@@ -192,14 +192,17 @@ let nodeView clusterMembership (model: ActiveNode option) dispatch =
     let nd = getFirstNode clusterMembership.Nodes
     div [ Class "row" ]
         [
+            match model with 
+            | Some node ->
+                yield div [ Class "col-md-12 col-lg-6" ]
+                        [   nodeInfo node.ANode ] 
+            | None -> ()
             yield div [ Class "col-md-12 col-lg-6" ]
                 [
                     transactionInfo clusterMembership.Cluster
                 ]
             match model with 
             | Some node ->
-                yield div [ Class "col-md-12 col-lg-6" ]
-                        [   nodeInfo node.ANode ] 
                 yield div [ Class "col-md-12 " ]
                         [   chains node.ANode.Chains node dispatch ]
             | None -> ()

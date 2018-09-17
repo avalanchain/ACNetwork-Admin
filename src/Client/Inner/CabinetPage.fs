@@ -64,7 +64,7 @@ let update (msg: Msg) model : Model * Cmd<ClientMsg> =
                                                                 ActiveCluster = {   ACluster        = cm 
                                                                                     ActiveNode      =   match cm.Nodes |> Seq.tryHead with
                                                                                                         | None -> None
-                                                                                                        | Some kv -> {  ANode               = kv.Key.NId
+                                                                                                        | Some kv -> {  ANode               = kv.Value
                                                                                                                         ChainsPagination    = { Page    = 1 
                                                                                                                                                 Total   = 8
                                                                                                                                                 MaxSize = 5 } } |> Some

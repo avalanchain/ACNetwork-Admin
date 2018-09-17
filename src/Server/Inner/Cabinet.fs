@@ -91,14 +91,16 @@ let getClusterMembership config (request: SecureRequest<ACClusterId>) : Task<Ser
         newChain()
         newChain()
     ]
+    let nid = NR { Nid = "Node 1" }
     return 
         {
             Cluster = { CId = request.Content }
-            Nodes   = [{    NId      = NR { Nid = "Node 1" } 
-                            Chains   = chains |> Set.ofList
-                            Endpoint = { IP = "http://127.0.0.1"; Port = 20000us }
-                            Cluster  = Some request.Content
-                        }, ACNodeState.Active ] |> Map.ofList
+            Nodes   = [nid ,{   NId      = nid 
+                                Chains   = chains |> Set.ofList
+                                Endpoint = { IP = "http://127.0.0.1"; Port = 20000us }
+                                Cluster  = Some request.Content
+                                State    = ACNodeState.Active
+                            }] |> Map.ofList
         }
         |> Ok 
 }

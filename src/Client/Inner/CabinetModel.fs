@@ -26,8 +26,8 @@ and ActiveCluster = {
     NodesPagination     : Paginate
 }
 and ActiveNode = {
-    ANode               : ACNodeId
-     
+    ANode               : ACNode
+
     ChainsPagination    : Paginate
 }
 // and ActiveNode = {

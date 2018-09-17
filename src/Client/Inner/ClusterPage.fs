@@ -37,15 +37,15 @@ let nodeViewBtn =
                         [ str "Open Node" ]
 
 
-let clusterChartProps (nodes: Map<ACNode,ACNodeState>) =
+let clusterChartProps (nodes: Map<ACNodeId, ACNode>) =
     //nodeName node.Key.NId
     let nodesValues = 
             nodes
-            |> Seq.map (fun node -> node.Key.Chains.Count |> float) 
+            |> Seq.map (fun node -> node.Value.Chains.Count |> float) 
             |> Seq.toArray
     let nodesNames = 
             nodes
-            |> Seq.map (fun node -> nodeName node.Key.NId |> string)
+            |> Seq.map (fun node -> nodeName node.Key |> string)
             |> Seq.toArray
 
     let datasets  = jsOptions<ChartJs.Chart.ChartDataSets>(fun o -> 
@@ -73,18 +73,19 @@ let clusterNodes model clusterMembership dispatch =
     let onclickFun page =  fun _ -> page |> NodesPagingMsg |> dispatch
     let rows = 
             clusterMembership.Nodes
-            |> Seq.map (fun node -> 
-                tr [] [ td [] (nodeNameSpans node.Key.NId)
+            |> Seq.map (fun kv -> 
+                let node = kv.Value
+                tr [] [ td [] (nodeNameSpans node.NId)
                                 
-                        td [] [ node.Key.Chains.Count |> string |> str ]
-                        td [] [ node.Key.Endpoint.IP |> string |> str ]
-                        td [] [ node.Key.Endpoint.Port |> string |> str ]
-                        td [] [ node.Key.Cluster |> string |> str]
+                        td [] [ node.Chains.Count |> string |> str ]
+                        td [] [ node.Endpoint.IP |> string |> str ]
+                        td [] [ node.Endpoint.Port |> string |> str ]
+                        td [] [ node.Cluster |> string |> str]
                         td [] 
                            [
                                span [ Class "label label-active" ]
                                     [
-                                        node.Value |> string |> str ]
+                                        node.State |> string |> str ]
                                     ]
                                 
                         td [] [ nodeViewBtn ] ])

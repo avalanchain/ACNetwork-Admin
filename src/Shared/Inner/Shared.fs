@@ -252,14 +252,14 @@ module ViewModels =
             NId     : ACNodeId
             Chains  : Set<ChainDef>
             Endpoint: Endpoint
-            Cluster : ACClusterId option 
+            Cluster : ACClusterId option
+            State   : ACNodeState 
         }
-
-        type ACNodeState = Active | Passive | Banned
+        and ACNodeState = Active | Passive | Banned
 
         type ACClusterMembership = {
             Cluster : ACCluster
-            Nodes   : Map<ACNode, ACNodeState> 
+            Nodes   : Map<ACNodeId, ACNode> 
         }
 
         module NodeManagement =

@@ -26,16 +26,8 @@ open ClientModels
 open Client.Page
 open BootstrapTable    
 
-let getNode (nodes:Map<ACNode, ACNodeState>) = 
-    nodes |> Map.fold (fun st k2 v2 ->
-    match st with
-    | Some(k1, v1) when v1 < v2 -> st
-    | _ -> Some(k2, v2)) None
-
-let node (nodes:Map<ACNode,ACNodeState>) = 
-    let nd = getNode nodes
-    match nd.Value with
-    | (a,b) -> a
+let getFirstNode (nodes:Map<ACNodeId, ACNode>) = 
+   nodes |> Seq.tryHead |> Option.map (fun kv -> kv.Value) 
 
 let clPage = MenuPage.Cabinet MenuPage.Cluster
 
@@ -196,21 +188,20 @@ let nodeInfo (node: ACNode) =
                           ] 
                       Ibox.iboxContent false [ndBody node]]
 
-let nodeView clusterMembership model dispatch = 
-    let nd = node clusterMembership.Nodes
+let nodeView clusterMembership (model: ActiveNode option) dispatch = 
+    let nd = getFirstNode clusterMembership.Nodes
     div [ Class "row" ]
         [
-            yield div [ Class "col-md-12 col-lg-6" ]
-                [
-                    nodeInfo nd  
-                ]
             yield div [ Class "col-md-12 col-lg-6" ]
                 [
                     transactionInfo clusterMembership.Cluster
                 ]
             match model with 
-            | Some node -> yield div [ Class "col-md-12 " ]
-                            [    chains nd.Chains node dispatch ]
+            | Some node ->
+                yield div [ Class "col-md-12 col-lg-6" ]
+                        [   nodeInfo node.ANode ] 
+                yield div [ Class "col-md-12 " ]
+                        [   chains node.ANode.Chains node dispatch ]
             | None -> ()
         ]
 

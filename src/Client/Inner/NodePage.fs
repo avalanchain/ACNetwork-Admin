@@ -63,7 +63,7 @@ let ndBody (node: ACNode) =
                                  [  str "Cluster: " ]
                                a [  Href (toHash clPage) 
                                     OnClick goToUrl ]
-                                 [ node.Cluster.Value |> string |> str ]
+                                 [ node.Clusters |> string |> str ]
                               ]
                         ]
                  ]

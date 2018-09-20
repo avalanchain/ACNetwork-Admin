@@ -20,6 +20,7 @@ module Auth =
         | AuthError of AuthError
         | InternalError of exn
         | NotImplementedError
+        | NotFound
 
     type ServerResult<'T> = Result<'T, ServerError>
 

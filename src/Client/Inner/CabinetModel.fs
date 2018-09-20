@@ -30,10 +30,6 @@ and ActiveNode = {
 
     ChainsPagination    : Paginate
 }
-// and ActiveNode = {
-//     ANode               : ACNodeId option
-//     ChainsPagination    : Paginate
-// }
 
 
 type TostrStatus = Success | Warning | Err | Info

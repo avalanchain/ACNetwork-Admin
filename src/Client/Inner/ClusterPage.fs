@@ -80,7 +80,7 @@ let clusterNodes model clusterMembership dispatch =
                         td [] [ node.Chains.Count |> string |> str ]
                         td [] [ node.Endpoint.IP |> string |> str ]
                         td [] [ node.Endpoint.Port |> string |> str ]
-                        td [] [ node.Cluster |> string |> str]
+                        td [] [ node.Clusters |> string |> str]
                         td [] 
                            [
                                span [ Class "label label-active" ]

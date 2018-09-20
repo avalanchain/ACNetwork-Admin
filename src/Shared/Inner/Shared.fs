@@ -6,6 +6,16 @@ open Result
 open Fable
 
 module Crypto = 
+    type Kid = uint16
+    type PublicKey = PublicKey of obj 
+    type PrivateKey = PrivateKey of obj 
+    type KeyPair = {
+        PublicKey: PublicKey
+        PrivateKey: PrivateKey
+        Kid: Kid
+    }
+    type KeyStorage = Kid -> KeyPair
+
     type [<Interface>] ICryptoContext =
         abstract getString  : byte[] -> string
         abstract getBytes   : string -> byte[]
@@ -21,7 +31,7 @@ module Crypto =
 
     type JwtAlgo = Ed25519
     type JwtType = JWT
-    type JwtKeyId = uint64
+    type JwtKeyId = Kid
     type JwtTokenHeader = {
         alg: JwtAlgo
         typ: JwtType
@@ -114,16 +124,7 @@ module ChainDefs =
         | GroupBy of groupper: Func1 * max: uint32
 
     type ChainRef = TokenRef
-
-//    type Kid = uint16
-//    type PublicKey = PublicKey of obj 
-//    type PrivateKey = PrivateKey of obj 
-//    type KeyPair = {
-//        PublicKey: PublicKey
-//        PrivateKey: PrivateKey
-//        Kid: Kid
-//    }
-//    type KeyStorage = Kid -> KeyPair
+    type ChainId  = ChainId of ChainRef
 
     [<RequireQualifiedAccess>] 
     type ChainType = 
@@ -145,7 +146,9 @@ module ChainDefs =
         chainType: ChainType
         encryption: Encryption
         compression: Compression 
-    }
+    } with 
+        member __.Ref = { Cid = string __.uid }
+        member __.ChainId = ChainId (__.Ref)
 
     type JwtToken<'T> = {
         Token: string
@@ -238,6 +241,23 @@ module ViewModels =
 
         open Network
 
+        module TrustCircles = 
+            type TrustCircle = {
+                TCId: Uid
+            } 
+
+        type AccountId      = AccountId of string
+        type AccountVClock  = AccountId * Pos
+
+        let nextAClock ((accId, pos): AccountVClock) = accId, pos + 1UL  
+
+        type Tr<'T> = Tr of 'T
+        type TransactionInfo<'T> = {
+            AClock  : AccountVClock
+            ChainId : ChainId
+            Tr      : Tr<'T>
+        }
+
         type ACClusterId = Uid
 
         type ACCluster = {
@@ -252,7 +272,7 @@ module ViewModels =
             NId     : ACNodeId
             Chains  : Set<ChainDef>
             Endpoint: Endpoint
-            Cluster : ACClusterId option
+            Clusters: ACClusterId list
             State   : ACNodeState 
         }
         and ACNodeState = Active | Passive | Banned
@@ -260,6 +280,11 @@ module ViewModels =
         type ACClusterMembership = {
             Cluster : ACCluster
             Nodes   : Map<ACNodeId, ACNode> 
+        }
+
+        type ACProcess = {
+            ProcessId: Uid
+            Clusters: Set<ACCluster> 
         }
 
         module NodeManagement =
@@ -282,12 +307,18 @@ module ViewModels =
                 | StopChain     of Nid: ACNodeId * ChainRef : ChainRef
                 | ListChains    of Map<ChainRef, ChainState>
 
+            type ACNodeChainStates = {
+                NodeId: ACNodeId
+                Chains: Map<ChainDef, ChainState>
+            }
 
         module ClusterManagement =
             type Commands = 
                 | AddNode       of ClusterId: ACClusterId * Node: ACNode
                 | RemoveNode    of ClusterId: ACClusterId * Nid : ACNodeId
                 | ListNodes     of ACNode list
+
+
 open ViewModels.ChainNetwork.NodeManagement
 
 
@@ -304,18 +335,19 @@ open ViewModels.ChainNetwork
 /// Every record field must have the type : 'a -> Async<'b> where 'a can also be `unit`
 /// Add more such fields, implement them on the server and they be directly available on client
 type ICabinetProtocol = {
-    getCustomer             : SecureVoidRequest             -> Async<ServerResult<ViewModels.Customer>> 
-    getClusters             : SecureVoidRequest             -> Async<ServerResult<ACCluster list>>
-    // getClusterById          : SecureRequest<ACClusterId>    -> Async<ServerResult<ACCluster option>>
-    getClusterMembership    : SecureRequest<ACClusterId>    -> Async<ServerResult<ACClusterMembership>>
+    getCustomer             : SecureVoidRequest                 -> Async<ServerResult<ViewModels.Customer>> 
+    getClusters             : SecureVoidRequest                 -> Async<ServerResult<ACCluster list>>
+    getClusterById          : SecureRequest<ACClusterId>        -> Async<ServerResult<ACCluster>>
+    getClusterMembership    : SecureRequest<ACClusterId>        -> Async<ServerResult<ACClusterMembership>>
 
-    // getNodeById             : SecureRequest<ACNodeId>       -> Async<ServerResult<ACNode option>>
-    // getNodeMembership       : SecureRequest<ACNodeId>       -> Async<ServerResult<ACClusterId list>>
-    // getNodeChainRefs        : SecureRequest<ACNodeId>       -> Async<ServerResult<ChainRef list>>
-    // getNodeChainDefs        : SecureRequest<ACNodeId>       -> Async<ServerResult<ChainDef list>>
-    // getNodeChains           : SecureRequest<ACNodeId>       -> Async<ServerResult<ChainState list>>
+    getNodeById             : SecureRequest<ACNodeId>           -> Async<ServerResult<ACNode>>
+    getNodeMembership       : SecureRequest<ACNodeId>           -> Async<ServerResult<ACClusterId list>>
+    getNodeChainIds         : SecureRequest<ACNodeId>           -> Async<ServerResult<Set<ChainId>>>
+    getNodeChainDefs        : SecureRequest<ACNodeId>           -> Async<ServerResult<ChainDef list>>
+    getNodeChain            : SecureRequest<ACNodeId * ChainId> -> Async<ServerResult<ChainState>>
+    getNodeChains           : SecureRequest<ACNodeId>           -> Async<ServerResult<ChainState list>>
 
-    // getChainByRef           : SecureRequest<ChainRef>       -> Async<ServerResult<ChainState option>>
+    getChainDefById         : SecureRequest<ChainId>            -> Async<ServerResult<ChainDef>>
 }
 
 module WsBridge =

@@ -39,7 +39,7 @@ module ChainDefs =
         | GroupBy of groupper: Func1 * max: uint32
 
     type ChainRef = TokenRef
-
+    type ChainId  = ChainId of ChainRef
 //    type Kid = uint16
 //    type PublicKey = PublicKey of obj 
 //    type PrivateKey = PrivateKey of obj 

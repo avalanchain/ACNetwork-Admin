@@ -120,7 +120,7 @@ let transactionInfo (cl: ACCluster) =
         labels = [| "01/01/2018"; "02/01/2018"; "03/01/2018"; "04/01/2018"; "05/01/2018"; "06/01/2018"; "07/01/2018" |] |> Array.map U2.Case1  
         datasets = [| dataset |] 
     }
-    let chartTransProps = chartProps chartTransData false 72.
+    let chartTransProps = chartProps chartTransData false 80.
     Ibox.btRow "Transaction History" false [
                          ofImport "Line" "react-chartjs-2" chartTransProps []
                     ]

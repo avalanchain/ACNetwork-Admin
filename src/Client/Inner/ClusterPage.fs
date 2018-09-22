@@ -138,7 +138,7 @@ let transactionInfo (cl: ACCluster) =
     }
     let chartTransProps = chartProps chartTransData false 72.
     Ibox.btRow "Transaction History" false [
-                         ofImport "Line" "react-chartjs-2" chartTransProps []
+                         ofImport "Bar" "react-chartjs-2" chartTransProps []
                     ]
 
 let clBody (cms : ACClusterMembership) = 
